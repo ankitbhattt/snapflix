@@ -56,7 +56,7 @@ const ExploreSection: React.FC = () => {
             <div 
               key={category.id} 
               className="category-item"
-              onClick={() => console.log(`Clicked ${category.name}`)}
+              onClick={() => {}}
             >
               <div 
                 className="category-icon"

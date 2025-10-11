@@ -20,6 +20,7 @@ const translations = {
     'header.profile': 'PROFILE',
     'header.news': 'NEWS',
     'header.live': 'LIVE',
+    'header.videos': 'VIDEOS',
     
     // Login Modal
     'login.welcome': 'Welcome to Snapflix',
@@ -166,6 +167,7 @@ const translations = {
     'homepage.action.play': 'Play Now',
     'homepage.action.watch': 'Watch',
     'homepage.action.explore': 'Explore',
+    'homepage.action.moreInfo': 'More Info',
   },
   
   zh: {
@@ -176,6 +178,7 @@ const translations = {
     'header.profile': '个人资料',
     'header.news': '新闻',
     'header.live': '直播',
+    'header.videos': '视频',
     
     // Login Modal
     'login.welcome': '欢迎来到 Snapflix',
@@ -322,6 +325,7 @@ const translations = {
     'homepage.action.play': '立即游戏',
     'homepage.action.watch': '观看',
     'homepage.action.explore': '探索',
+    'homepage.action.moreInfo': '更多信息',
   },
   
   fr: {
@@ -332,6 +336,7 @@ const translations = {
     'header.profile': 'PROFIL',
     'header.news': 'ACTUALITÉS',
     'header.live': 'EN DIRECT',
+    'header.videos': 'VIDÉOS',
     
     // Login Modal
     'login.welcome': 'Bienvenue sur Snapflix',
@@ -478,6 +483,7 @@ const translations = {
     'homepage.action.play': 'Jouer maintenant',
     'homepage.action.watch': 'Regarder',
     'homepage.action.explore': 'Explorer',
+    'homepage.action.moreInfo': 'Plus d\'infos',
   }
 };
 
@@ -487,7 +493,6 @@ export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ childre
   const t = (key: string): string => {
     const translation = translations[language][key as keyof typeof translations[typeof language]];
     if (!translation) {
-      console.warn(`Translation missing for key: ${key} in language: ${language}`);
       return key; // Fallback to key if translation is missing
     }
     return translation;

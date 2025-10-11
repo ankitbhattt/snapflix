@@ -15,6 +15,9 @@ import SubscriptionPage from './components/SubscriptionPage';
 import NewsPage from './components/NewsPage';
 import UnsubscribePage from './components/UnsubscribePage';
 import SubscriptionManagementPage from './components/SubscriptionManagementPage';
+import VideosPage from './components/VideosPage';
+import FAQPage from './components/FAQPage';
+import AboutPage from './components/AboutPage';
 import Notification from './components/Notification';
 import ThemeToggle from './components/ThemeToggle';
 import ParticleBackground from './components/ParticleBackground';
@@ -23,7 +26,7 @@ import FloatingActionButton from './components/FloatingActionButton';
 import Footer from './components/Footer';
 import { TranslationProvider } from './contexts/TranslationContext';
 
-type Page = 'home' | 'rewards' | 'profile' | 'subscription' | 'news' | 'unsubscribe' | 'subscription-management';
+type Page = 'home' | 'rewards' | 'profile' | 'subscription' | 'news' | 'unsubscribe' | 'subscription-management' | 'videos' | 'faq' | 'about';
 
 function AppContent() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -106,6 +109,12 @@ function AppContent() {
         return <UnsubscribePage onNavigate={handleNavigate} onLogout={handleLogout} />;
       case 'subscription-management':
         return <SubscriptionManagementPage onNavigate={handleNavigate} />;
+      case 'videos':
+        return <VideosPage />;
+      case 'faq':
+        return <FAQPage />;
+      case 'about':
+        return <AboutPage />;
       default:
         return (
           <>

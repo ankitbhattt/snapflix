@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Header.css';
 import SnapflixLogo from './SnapflixLogo';
-import MoreDropdown from './MoreDropdown';
+import SearchModal from './SearchModal';
 import { useTranslation } from '../contexts/TranslationContext';
 
 interface HeaderProps {
@@ -13,8 +13,11 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
   const { language, setLanguage, t } = useTranslation();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const languageRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -25,7 +28,6 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
   const handleLanguageSelect = (languageCode: string) => {
     setLanguage(languageCode as 'en' | 'zh' | 'fr');
     setShowLanguageDropdown(false);
-    console.log('Language changed to:', languageCode);
   };
 
   // Close dropdown when clicking outside
@@ -37,6 +39,12 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
       if (languageRef.current && !languageRef.current.contains(event.target as Node)) {
         setShowLanguageDropdown(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.mobile-menu-toggle')) {
+          setShowMobileMenu(false);
+        }
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -47,45 +55,157 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
 
   const handleProfileAction = (action: string) => {
     setShowProfileDropdown(false);
+    setShowMobileMenu(false);
     if (action === 'login' && onNavigate) {
       onNavigate('login');
-    } else if (action === 'signup' && onNavigate) {
-      onNavigate('signup');
-    } else if (action === 'help' && onNavigate) {
-      onNavigate('help');
+    } else if (action === 'videos' && onNavigate) {
+      onNavigate('videos');
+    } else if (action === 'faq' && onNavigate) {
+      onNavigate('faq');
     } else if (action === 'about' && onNavigate) {
       onNavigate('about');
     }
-    console.log('Profile action:', action);
+  };
+
+  const handleNavigation = (page: string) => {
+    if (onNavigate) {
+      onNavigate(page);
+    }
+    setShowMobileMenu(false);
   };
 
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo" onClick={() => onNavigate && onNavigate('home')}>
+        <div className="logo" onClick={() => handleNavigation('home')}>
           <SnapflixLogo size="medium" animated={true} />
         </div>
+        
+        {/* Mobile Menu Toggle */}
+        <button 
+          className={`mobile-menu-toggle ${showMobileMenu ? 'active' : ''}`}
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+          aria-label="Toggle menu"
+        >
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+        </button>
         
         <nav className="navigation">
           <button 
             className={`nav-link ${currentPage === 'home' ? 'active' : ''}`}
-            onClick={() => onNavigate && onNavigate('home')}
+            onClick={() => handleNavigation('home')}
           >
             {t('header.home')}
           </button>
-          <button className="nav-link">VIDEOS</button>
+          <button 
+            className={`nav-link ${currentPage === 'videos' ? 'active' : ''}`}
+            onClick={() => handleNavigation('videos')}
+          >
+            {t('header.videos')}
+          </button>
           <button 
             className={`nav-link ${currentPage === 'rewards' ? 'active' : ''}`}
-            onClick={() => onNavigate && onNavigate('rewards')}
+            onClick={() => handleNavigation('rewards')}
           >
             {t('header.rewards')}
           </button>
-          <MoreDropdown />
+          <button 
+            className="nav-link search-nav-btn"
+            onClick={() => setShowSearch(true)}
+          >
+            <span className="search-nav-icon">🔍</span>
+            Search
+          </button>
         </nav>
         
+        {/* Mobile Menu */}
+        {showMobileMenu && (
+          <div className="mobile-menu" ref={mobileMenuRef}>
+            <div className="mobile-menu-content">
+              <div className="mobile-menu-nav">
+                <button 
+                  className={`mobile-nav-link ${currentPage === 'home' ? 'active' : ''}`}
+                  onClick={() => handleNavigation('home')}
+                >
+                  <span className="mobile-nav-icon">🏠</span>
+                  {t('header.home')}
+                </button>
+                <button 
+                  className={`mobile-nav-link ${currentPage === 'videos' ? 'active' : ''}`}
+                  onClick={() => handleNavigation('videos')}
+                >
+                  <span className="mobile-nav-icon">🎬</span>
+                  {t('header.videos')}
+                </button>
+                <button 
+                  className={`mobile-nav-link ${currentPage === 'rewards' ? 'active' : ''}`}
+                  onClick={() => handleNavigation('rewards')}
+                >
+                  <span className="mobile-nav-icon">🏆</span>
+                  {t('header.rewards')}
+                </button>
+                <button 
+                  className={`mobile-nav-link ${currentPage === 'subscription' ? 'active' : ''}`}
+                  onClick={() => handleNavigation('subscription')}
+                >
+                  <span className="mobile-nav-icon">💳</span>
+                  {t('header.subscribe')}
+                </button>
+                <button 
+                  className="mobile-nav-link"
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    setShowSearch(true);
+                  }}
+                >
+                  <span className="mobile-nav-icon">🔍</span>
+                  Search
+                </button>
+              </div>
+              
+              <div className="mobile-menu-divider"></div>
+              
+              <div className="mobile-menu-profile">
+                <button className="mobile-nav-link" onClick={() => handleProfileAction('login')}>
+                  <span className="mobile-nav-icon">🔑</span>
+                  {t('login.title')}
+                </button>
+                <button className="mobile-nav-link" onClick={() => handleProfileAction('faq')}>
+                  <span className="mobile-nav-icon">❓</span>
+                  {t('profile.menu.faq')}
+                </button>
+                <button className="mobile-nav-link" onClick={() => handleProfileAction('about')}>
+                  <span className="mobile-nav-icon">ℹ️</span>
+                  {t('profile.menu.about')}
+                </button>
+              </div>
+              
+              <div className="mobile-menu-divider"></div>
+              
+              <div className="mobile-menu-language">
+                <div className="mobile-language-label">Language</div>
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    className={`mobile-language-option ${language === lang.code ? 'selected' : ''}`}
+                    onClick={() => {
+                      handleLanguageSelect(lang.code);
+                      setShowMobileMenu(false);
+                    }}
+                  >
+                    <span className="mobile-nav-icon">{lang.flag}</span>
+                    {lang.name}
+                    {language === lang.code && <span className="check-icon">✓</span>}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div className="header-actions">
-          <button className="action-btn search-btn">🔍</button>
-          
           <div className="language-selector" ref={languageRef}>
             <button 
               className="action-btn language-btn"
@@ -135,27 +255,26 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
                   <span className="menu-icon">🔑</span>
                   {t('login.title')}
                 </div>
-                <div className="profile-menu-item" onClick={() => handleProfileAction('signup')}>
-                  <span className="menu-icon">📝</span>
-                  {t('login.signup')}
-                </div>
-                <div className="profile-menu-item" onClick={() => handleProfileAction('help')}>
-                  <span className="menu-icon">ℹ️</span>
-                  {t('profile.menu.help')}
-                </div>
-                <div className="profile-menu-item" onClick={() => handleProfileAction('about')}>
-                  <span className="menu-icon">⚙️</span>
-                  {t('profile.menu.about')}
+                <div className="profile-menu-item" onClick={() => handleProfileAction('videos')}>
+                  <span className="menu-icon">🎬</span>
+                  {t('header.videos')}
                 </div>
                 <div className="profile-menu-item" onClick={() => handleProfileAction('faq')}>
                   <span className="menu-icon">❓</span>
                   {t('profile.menu.faq')}
+                </div>
+                <div className="profile-menu-item" onClick={() => handleProfileAction('about')}>
+                  <span className="menu-icon">ℹ️</span>
+                  {t('profile.menu.about')}
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+      
+      {/* Search Modal */}
+      {showSearch && <SearchModal onClose={() => setShowSearch(false)} />}
     </header>
   );
 };

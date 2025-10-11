@@ -31,7 +31,6 @@ const MoreDropdown: React.FC = () => {
   }, []);
 
   const handleCategoryClick = (category: string) => {
-    console.log('Selected category:', category);
     setIsOpen(false);
   };
 

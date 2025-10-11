@@ -104,7 +104,6 @@ const SubscriptionPage: React.FC = () => {
   const applyCoupon = () => {
     if (couponCode.trim()) {
       // Handle coupon application logic
-      console.log('Applying coupon:', couponCode);
     }
   };
 
