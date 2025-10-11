@@ -1,0 +1,261 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: #2d2d2d;
+  border-radius: 16px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.otp-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.gamepad-character {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.gamepad-icon {
+  font-size: 48px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.speech-bubble {
+  position: absolute;
+  top: -10px;
+  right: -20px;
+  background-color: white;
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: speechBubble 2s infinite;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 15px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid white;
+}
+
+@keyframes speechBubble {
+  0%, 50%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  25%, 75% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.otp-title {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.otp-description {
+  color: #ccc;
+  font-size: 14px;
+  margin: 0;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.otp-input {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background-color: #1a1a1a;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.otp-input.filled {
+  border-color: #dc2626;
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+.resend-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.resend-timer {
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.resend-button {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.resend-button:hover {
+  color: #b91c1c;
+}
+
+.verify-button {
+  width: 100%;
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.verify-button:hover:not(:disabled) {
+  background-color: #b91c1c;
+  transform: translateY(-2px);
+}
+
+.verify-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+    max-width: 100%;
+  }
+  
+  .otp-title {
+    font-size: 20px;
+  }
+  
+  .otp-description {
+    font-size: 13px;
+  }
+  
+  .otp-inputs {
+    gap: 10px;
+  }
+  
+  .otp-input {
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+  
+  .verify-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .gamepad-icon {
+    font-size: 40px;
+  }
+  
+  .speech-bubble {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
