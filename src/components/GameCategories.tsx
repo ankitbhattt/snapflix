@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import './GameCategories.css';
+import { useTranslation } from '../contexts/TranslationContext';
 
 interface VideoItem {
   name: string;
@@ -12,6 +13,7 @@ interface VideoCategoriesProps {
 }
 
 const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
+  const { t } = useTranslation();
   const categories = [
     {
       title: "TOP TRENDING VIDEOS",
@@ -66,6 +68,11 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
 
   return (
     <div className="game-categories">
+      <div className="categories-header">
+        <h1 className="categories-main-title">{t('homepage.categories.title')}</h1>
+        <p className="categories-main-subtitle">{t('homepage.categories.subtitle')}</p>
+      </div>
+      
       {categories.map((category, categoryIndex) => (
         <section key={categoryIndex} className="category-section">
           <div className="category-header">

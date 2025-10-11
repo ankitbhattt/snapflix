@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './OTPModal.css';
+import SnapflixLogo from './SnapflixLogo';
 
 interface OTPModalProps {
   phoneNumber: string;
@@ -67,51 +68,104 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
         <button className="close-button" onClick={onClose}>×</button>
         
         <div className="otp-header">
-          <div className="gamepad-character">
-            <div className="gamepad-icon">🎮</div>
-            <div className="speech-bubble">Hi!</div>
+          <div className="snapflix-logo-container">
+            <SnapflixLogo size="small" animated={true} />
           </div>
-          <h2 className="otp-title">Enter Your OTP</h2>
+          <h2 className="otp-title">Verify Your Phone</h2>
+          <p className="otp-subtitle">Almost there! Complete your verification</p>
           <p className="otp-description">
-            A text message was sent to {phoneNumber}
+            Enter the 4-digit code sent to {phoneNumber}
           </p>
+          
+          <div className="verification-features">
+            <div className="feature-item">
+              <span className="feature-icon">📱</span>
+              <span>Secure Login</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">⚡</span>
+              <span>Quick Setup</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">🔐</span>
+              <span>Protected Account</span>
+            </div>
+          </div>
         </div>
 
-        <div className="otp-inputs">
-          {otp.map((digit, index) => (
-            <input
-              key={index}
-              id={`otp-${index}`}
-              type="text"
-              value={digit}
-              onChange={(e) => handleOtpChange(index, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(index, e)}
-              className={`otp-input ${digit ? 'filled' : ''}`}
-              maxLength={1}
-              autoComplete="off"
-            />
-          ))}
+        <div className="otp-inputs-container">
+          <div className="otp-inputs">
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+                id={`otp-${index}`}
+                type="text"
+                value={digit}
+                onChange={(e) => handleOtpChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                className={`otp-input ${digit ? 'filled' : ''}`}
+                maxLength={1}
+                autoComplete="off"
+              />
+            ))}
+          </div>
+          <div className="otp-progress">
+            <div className={`progress-bar ${otp.filter(d => d).length > 0 ? 'active' : ''}`} 
+                 style={{width: `${(otp.filter(d => d).length / 4) * 100}%`}}></div>
+          </div>
+        </div>
+
+        <div className="security-notice">
+          <div className="security-icon">🛡️</div>
+          <span>Your verification is secure and encrypted</span>
         </div>
 
         <div className="resend-section">
           {isResendDisabled ? (
-            <p className="resend-timer">
-              Resend Available in {formatTime(timeLeft)}
-            </p>
+            <div className="resend-timer-container">
+              <div className="timer-icon">⏱️</div>
+              <div className="timer-content">
+                <p className="resend-timer">
+                  Resend Available in {formatTime(timeLeft)}
+                </p>
+                <p className="timer-description">Didn't receive the code?</p>
+              </div>
+            </div>
           ) : (
             <button className="resend-button" onClick={handleResend}>
-              Resend OTP
+              <span>🔄</span>
+              <span>Resend OTP</span>
             </button>
           )}
         </div>
 
-        <button 
-          className="verify-button"
-          onClick={handleVerify}
-          disabled={!otp.every(digit => digit !== '')}
-        >
-          Verify OTP
-        </button>
+        <div className="verify-section">
+          <button 
+            className="verify-button"
+            onClick={handleVerify}
+            disabled={!otp.every(digit => digit !== '')}
+            style={{
+              background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
+              opacity: !otp.every(digit => digit !== '') ? 0.6 : 1
+            }}
+          >
+            <span>Verify & Continue</span>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+              <path d="M4 10L16 10M10 4L16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          
+          <div className="verification-tips">
+            <div className="tip-item">
+              <span className="tip-icon">💡</span>
+              <span>Check your messages for the code</span>
+            </div>
+            <div className="tip-item">
+              <span className="tip-icon">📞</span>
+              <span>Code expires in 2 minutes</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -13,16 +13,19 @@ import RewardsPage from './components/RewardsPage';
 import ProfilePage from './components/ProfilePage';
 import SubscriptionPage from './components/SubscriptionPage';
 import NewsPage from './components/NewsPage';
+import UnsubscribePage from './components/UnsubscribePage';
+import SubscriptionManagementPage from './components/SubscriptionManagementPage';
 import Notification from './components/Notification';
 import ThemeToggle from './components/ThemeToggle';
 import ParticleBackground from './components/ParticleBackground';
 import SimpleParticleBackground from './components/SimpleParticleBackground';
 import FloatingActionButton from './components/FloatingActionButton';
 import Footer from './components/Footer';
+import { TranslationProvider } from './contexts/TranslationContext';
 
-type Page = 'home' | 'rewards' | 'profile' | 'subscription' | 'news';
+type Page = 'home' | 'rewards' | 'profile' | 'subscription' | 'news' | 'unsubscribe' | 'subscription-management';
 
-function App() {
+function AppContent() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -49,8 +52,9 @@ function App() {
   const handleOTPVerify = useCallback(() => {
     setShowOTPModal(false);
     setIsLoggedIn(true);
+    setCurrentPage('subscription');
     setNotification({
-      message: 'Login successful! Welcome to The Gameium!',
+      message: 'Welcome to Snapflix!',
       type: 'success'
     });
   }, []);
@@ -98,6 +102,10 @@ function App() {
         return <SubscriptionPage />;
       case 'news':
         return <NewsPage />;
+      case 'unsubscribe':
+        return <UnsubscribePage onNavigate={handleNavigate} onLogout={handleLogout} />;
+      case 'subscription-management':
+        return <SubscriptionManagementPage onNavigate={handleNavigate} />;
       default:
         return (
           <>
@@ -158,6 +166,14 @@ function App() {
       <ThemeToggle onThemeChange={handleThemeChange} />
       <FloatingActionButton onQuickAction={handleQuickAction} />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <TranslationProvider>
+      <AppContent />
+    </TranslationProvider>
   );
 }
 

@@ -46,7 +46,7 @@ const MoreDropdown: React.FC = () => {
       
       {isOpen && (
         <div className="more-menu">
-          <div className="menu-header">THE GAMEIUM ORIGINALS</div>
+          <div className="menu-header">THE SNAPFLIX ORIGINALS</div>
           <div className="menu-categories">
             {categories.map((category, index) => (
               <div

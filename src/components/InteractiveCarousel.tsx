@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './InteractiveCarousel.css';
+import { useTranslation } from '../contexts/TranslationContext';
 
 interface CarouselItem {
   id: number;
@@ -14,6 +15,7 @@ interface InteractiveCarouselProps {
 }
 
 const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }) => {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -80,6 +82,11 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+      <div className="carousel-header">
+        <h1 className="carousel-main-title">{t('homepage.carousel.title')}</h1>
+        <p className="carousel-main-subtitle">{t('homepage.carousel.subtitle')}</p>
+      </div>
+      
       <div className="carousel-container">
         <div className="slide-content">
           <div className="slide-text">
@@ -89,7 +96,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
               className="slide-button"
               onClick={onGameClick}
             >
-              Let's Play
+              {t('homepage.action.play')}
             </button>
           </div>
           

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './PostLoginHeader.css';
 import SnapflixLogo from './SnapflixLogo';
 import MoreDropdown from './MoreDropdown';
+import { useTranslation } from '../contexts/TranslationContext';
 
 interface PostLoginHeaderProps {
   onLogout: () => void;
@@ -10,26 +11,22 @@ interface PostLoginHeaderProps {
 }
 
 const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate, currentPage }) => {
+  const { language, setLanguage, t } = useTranslation();
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
   const languageRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
   const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'hi', name: 'हिन्दी (Hindi)' },
-    { code: 'bn', name: 'বাঙালি (Bengali)' },
-    { code: 'ar', name: 'عربی (Arabic)' },
-    { code: 'fr', name: 'Français (French)' },
-    { code: 'pl', name: 'Polski (Polish)' }
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'zh', name: '中文 (Chinese)', flag: '🇨🇳' },
+    { code: 'fr', name: 'Français (French)', flag: '🇫🇷' }
   ];
 
-  const handleLanguageSelect = (language: string) => {
-    setSelectedLanguage(language);
+  const handleLanguageSelect = (languageCode: string) => {
+    setLanguage(languageCode as 'en' | 'zh' | 'fr');
     setShowLanguageDropdown(false);
-    // You can add language change logic here
-    console.log('Language changed to:', language);
+    console.log('Language changed to:', languageCode);
   };
 
   const handleProfileAction = (action: string) => {
@@ -42,6 +39,10 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
       onNavigate('rewards');
     } else if (action === 'home' && onNavigate) {
       onNavigate('home');
+    } else if (action === 'help' && onNavigate) {
+      onNavigate('unsubscribe');
+    } else if (action === 'subscriptions' && onNavigate) {
+      onNavigate('subscription-management');
     }
     // Handle other actions as needed
     console.log('Profile action:', action);
@@ -71,7 +72,7 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
     <header className="post-login-header">
       <div className="header-container">
         <div className="logo" onClick={() => onNavigate && onNavigate('home')}>
-          <SnapflixLogo size="large" animated={true} />
+          <SnapflixLogo size="medium" animated={true} />
         </div>
         
             <nav className="navigation">
@@ -79,21 +80,14 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
                 className={`nav-link ${currentPage === 'home' ? 'active' : ''}`}
                 onClick={() => onNavigate && onNavigate('home')}
               >
-                HOME
+                {t('header.home')}
               </button>
               <button className="nav-link">VIDEOS</button>
-              <button 
-                className={`nav-link ${currentPage === 'news' ? 'active' : ''}`}
-                onClick={() => onNavigate && onNavigate('news')}
-              >
-                NEWS
-              </button>
-              <button className="nav-link">LIVE</button>
               <button 
                 className={`nav-link ${currentPage === 'rewards' ? 'active' : ''}`}
                 onClick={() => onNavigate && onNavigate('rewards')}
               >
-                REWARDS
+                {t('header.rewards')}
               </button>
               <MoreDropdown />
             </nav>
@@ -106,19 +100,22 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
               className="action-btn language-btn"
               onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
             >
-              <span className="language-icon">A文</span>
+              <span className="language-icon">
+                {languages.find(lang => lang.code === language)?.flag || '🌐'}
+              </span>
             </button>
             {showLanguageDropdown && (
               <div className="language-dropdown">
                 {languages.map((lang) => (
                   <div
                     key={lang.code}
-                    className={`language-option ${selectedLanguage === lang.name ? 'selected' : ''}`}
-                    onClick={() => handleLanguageSelect(lang.name)}
+                    className={`language-option ${language === lang.code ? 'selected' : ''}`}
+                    onClick={() => handleLanguageSelect(lang.code)}
                   >
                     <span className="radio-indicator">
-                      {selectedLanguage === lang.name && <div className="radio-dot"></div>}
+                      {language === lang.code && <div className="radio-dot"></div>}
                     </span>
+                    <span className="language-flag">{lang.flag}</span>
                     {lang.name}
                   </div>
                 ))}
@@ -130,7 +127,7 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
             className="subscribe-btn"
             onClick={() => onNavigate && onNavigate('subscription')}
           >
-            Subscribe
+            {t('header.subscribe')}
           </button>
           
               <div className="profile-dropdown" ref={profileRef}>
@@ -151,31 +148,27 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
               <div className="profile-menu" style={{ display: 'block' }}>
                 <div className="profile-menu-item" onClick={() => handleProfileAction('profile')}>
                   <span className="menu-icon">👤</span>
-                  PROFILE
+                  {t('profile.menu.profile')}
                 </div>
                 <div className="profile-menu-item" onClick={() => handleProfileAction('subscriptions')}>
                   <span className="menu-icon">💳</span>
-                  SUBSCRIPTIONS
-                </div>
-                <div className="profile-menu-item" onClick={() => handleProfileAction('blogs')}>
-                  <span className="menu-icon">✏️</span>
-                  BLOGS
+                  {t('profile.menu.subscriptions')}
                 </div>
                 <div className="profile-menu-item" onClick={() => handleProfileAction('help')}>
                   <span className="menu-icon">ℹ️</span>
-                  HELP
+                  {t('profile.menu.help')}
                 </div>
                 <div className="profile-menu-item" onClick={() => handleProfileAction('about')}>
                   <span className="menu-icon">⚙️</span>
-                  ABOUT US
+                  {t('profile.menu.about')}
                 </div>
                 <div className="profile-menu-item" onClick={() => handleProfileAction('faq')}>
                   <span className="menu-icon">❓</span>
-                  FAQ
+                  {t('profile.menu.faq')}
                 </div>
                 <div className="profile-menu-item logout" onClick={() => handleProfileAction('logout')}>
                   <span className="menu-icon">↪️</span>
-                  LOGOUT
+                  {t('profile.menu.logout')}
                 </div>
               </div>
             )}

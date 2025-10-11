@@ -32,22 +32,7 @@
   transform: scale(1.05);
 }
 
-.logo-icon {
-  background-color: white;
-  color: #dc2626;
-  font-weight: bold;
-  font-size: 24px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.logo-icon::after {
-  content: '🎮';
-  font-size: 16px;
-}
+/* Logo styles are handled by SnapflixLogo component */
 
 .navigation {
   display: flex;
@@ -123,6 +108,72 @@
 .subscribe-btn:hover {
   background-color: #b91c1c;
   transform: translateY(-1px);
+}
+
+/* Language Selector */
+.language-selector {
+  position: relative;
+  margin-right: 10px;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: 8px 0;
+  min-width: 200px;
+  z-index: 1001;
+  margin-top: 5px;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: white;
+  font-size: 14px;
+}
+
+.language-flag {
+  font-size: 16px;
+}
+
+.language-option:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.language-option.selected {
+  background-color: #dc2626;
+  color: white;
+}
+
+.radio-indicator {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #666;
+  border-radius: 50%;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.language-option.selected .radio-indicator {
+  border-color: #dc2626;
+}
+
+.radio-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #dc2626;
+  border-radius: 50%;
 }
 
 /* Profile Dropdown */

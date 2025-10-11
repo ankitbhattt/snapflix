@@ -32,22 +32,7 @@
   transform: scale(1.05);
 }
 
-.logo-icon {
-  background-color: white;
-  color: #dc2626;
-  font-weight: bold;
-  font-size: 24px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.logo-icon::after {
-  content: '🎮';
-  font-size: 16px;
-}
+/* Logo styles are handled by SnapflixLogo component */
 
 .navigation {
   display: flex;
@@ -151,11 +136,16 @@
 .language-option {
   display: flex;
   align-items: center;
+  gap: 10px;
   padding: 10px 16px;
   cursor: pointer;
   transition: background-color 0.2s ease;
   color: white;
   font-size: 14px;
+}
+
+.language-flag {
+  font-size: 16px;
 }
 
 .language-option:hover {

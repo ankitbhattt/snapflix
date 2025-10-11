@@ -1,14 +1,17 @@
 import React from 'react';
 import './VideosSection.css';
+import { useTranslation } from '../contexts/TranslationContext';
 
 const VideosSection: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <div className="videos-section">
       <div className="videos-container">
-        <h2 className="videos-title">VIDEOS</h2>
+        <h2 className="videos-title">{t('homepage.videos.title')}</h2>
         <div className="videos-content">
           <p className="videos-description">
-            Discover the latest gaming content, tutorials, and highlights from The Gameium community.
+            {t('homepage.videos.subtitle')}
           </p>
           <div className="videos-grid">
             {/* Placeholder for video content */}

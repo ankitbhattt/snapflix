@@ -7,6 +7,45 @@
   border-radius: 0 0 20px 20px;
   margin-bottom: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 1s ease-out;
+}
+
+.carousel-header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  text-align: left;
+}
+
+.carousel-main-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 10px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.carousel-main-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .carousel-container {
@@ -65,6 +104,8 @@
   animation: slideInLeft 1s ease-out;
   position: relative;
   overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .slide-button::before {
@@ -84,8 +125,13 @@
 
 .slide-button:hover {
   background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(220, 38, 38, 0.6);
+  transform: translateY(-5px) scale(1.08);
+  box-shadow: 0 15px 40px rgba(220, 38, 38, 0.7);
+}
+
+.slide-button:active {
+  transform: translateY(-2px) scale(1.02);
+  transition: all 0.1s ease;
 }
 
 .slide-image {

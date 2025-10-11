@@ -1,11 +1,13 @@
 import React from 'react';
 import './ExploreSection.css';
+import { useTranslation } from '../contexts/TranslationContext';
 
 const ExploreSection: React.FC = () => {
+  const { t } = useTranslation();
   const categories = [
     {
       id: 'originals',
-      name: 'The Gameium Originals',
+      name: 'The Snapflix Originals',
       icon: '🎮',
       color: '#dc2626'
     },
@@ -44,10 +46,11 @@ const ExploreSection: React.FC = () => {
   return (
     <div className="explore-section">
       <div className="explore-background">
-        <h1 className="explore-bg-text">EXPLORE</h1>
+        <h1 className="explore-bg-text">{t('homepage.explore.title')}</h1>
       </div>
       <div className="explore-content">
-        <h2 className="explore-title">EXPLORE</h2>
+        <h2 className="explore-title">{t('homepage.explore.title')}</h2>
+        <p className="explore-subtitle">{t('homepage.explore.subtitle')}</p>
         <div className="categories-grid">
           {categories.map((category) => (
             <div 
