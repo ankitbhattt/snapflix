@@ -188,9 +188,10 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: scale(0.9) translateZ(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
+  will-change: opacity, transform;
 }
 
 .video-element.visible {

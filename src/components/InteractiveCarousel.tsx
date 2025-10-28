@@ -18,7 +18,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [showVideo, setShowVideo] = useState(false);
+  const [showVideo, setShowVideo] = useState(true);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [hoverTimer, setHoverTimer] = useState<NodeJS.Timeout | null>(null);
@@ -29,58 +29,74 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const carouselItems: CarouselItem[] = [
     {
       id: 1,
-      title: "FPS",
-      video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      description: "Experience intense first-person action",
-      image: "https://images.unsplash.com/photo-1556438064-2d7646166914?w=800&h=400&fit=crop"
+      title: "GTA 6 Trailer",
+      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4",
+      description: "The most anticipated game trailer",
+      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg"
     },
     {
       id: 2,
-      title: "Racing",
-      video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-      description: "High-speed racing adventures",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop"
+      title: "OnePiece Edit",
+      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4",
+      description: "Epic OnePiece moments compilation",
+      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg"
     },
     {
       id: 3,
-      title: "Adventure",
-      video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      description: "Epic quests and exploration",
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=400&fit=crop"
+      title: "Cyberpunk Edit",
+      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4",
+      description: "Futuristic cyberpunk action",
+      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566575/samples/people/kitchen-bar.jpg"
+    },
+    {
+      id: 4,
+      title: "OnePiece Quotes",
+      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4",
+      description: "Inspirational quotes from OnePiece",
+      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg"
+    },
+    {
+      id: 5,
+      title: "Death Note Edit",
+      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/148_-_Death_note_edit_rf3xpx.mp4",
+      description: "Mind games and psychological thriller",
+      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg"
     }
   ];
 
 
   const nextSlide = useCallback(() => {
-    setShowVideo(false);
     setCurrentIndex((prevIndex) => 
       prevIndex === carouselItems.length - 1 ? 0 : prevIndex + 1
     );
   }, [carouselItems.length]);
 
   const prevSlide = useCallback(() => {
-    setShowVideo(false);
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? carouselItems.length - 1 : prevIndex - 1
     );
   }, [carouselItems.length]);
 
   const goToSlide = useCallback((index: number) => {
-    setShowVideo(false);
     setCurrentIndex(index);
   }, []);
 
   useEffect(() => {
     if (!isAutoPlaying) return;
 
-    const interval = setInterval(nextSlide, 5000);
+    const interval = setInterval(nextSlide, 4000);
     return () => clearInterval(interval);
   }, [nextSlide, isAutoPlaying]);
 
-  // Reset video state when slide changes
+  // Start video when slide changes (only on hover)
   useEffect(() => {
-    setShowVideo(false);
-  }, [currentIndex]);
+    if (videoRef.current && isHovered) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch((err) => {
+        console.log('Video play failed:', err);
+      });
+    }
+  }, [currentIndex, isHovered]);
 
   // Handle click outside More Info
   useEffect(() => {
@@ -111,28 +127,18 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     setIsHovered(true);
     setIsAutoPlaying(false);
     
-    // Start video after 0.5 seconds of hover (exactly like game cards)
-    setHoverTimer(setTimeout(() => {
-      setShowVideo(true);
-      if (videoRef.current) {
-        videoRef.current.currentTime = 0;
-        videoRef.current.play().catch(() => {});
-        
-        // Stop video after 5 seconds
-        setVideoTimer(setTimeout(() => {
-          if (videoRef.current) {
-            videoRef.current.pause();
-            setShowVideo(false);
-          }
-        }, 5000));
-      }
-    }, 500));
+    // Start video immediately on hover
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch((err) => {
+        console.log('Video play failed:', err);
+      });
+    }
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
     setIsAutoPlaying(true);
-    setShowVideo(false);
     
     if (hoverTimer) {
       clearTimeout(hoverTimer);
@@ -230,29 +236,24 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
           </div>
           
           <div className="slide-media">
-            <img 
-              src={currentItem.image}
-              alt={currentItem.title}
-              className={`slide-image-element ${showVideo ? 'hidden' : ''}`}
-            />
             <video
               key={`video-${currentIndex}`}
               ref={videoRef}
               src={currentItem.video}
-              className={`slide-video-element ${showVideo ? 'visible' : ''}`}
+              className="slide-video-element visible"
               muted
               playsInline
               loop={false}
-              preload="auto"
+              preload="metadata"
+              onError={(e) => console.log('Video error:', e)}
+              onLoadStart={() => console.log('Video loading started')}
+              onCanPlay={() => console.log('Video can play')}
             />
-            <div className={`media-overlay ${showVideo ? 'video-active' : ''}`}>
-              {!showVideo && <div className="play-icon">▶</div>}
-              {showVideo && (
-                <div className="video-preview-badge">
-                  <span className="preview-dot"></span>
-                  <span>PREVIEW</span>
-                </div>
-              )}
+            <div className="media-overlay video-active">
+              <div className="video-preview-badge">
+                <span className="preview-dot"></span>
+                <span>PREVIEW</span>
+              </div>
             </div>
             
             
