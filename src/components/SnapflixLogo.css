@@ -1,11 +1,16 @@
 .snapflix-logo {
-  display: inline-block;
+  display: block;
   cursor: pointer;
   transition: all 0.3s ease;
   visibility: visible !important;
   opacity: 1 !important;
   position: relative;
   z-index: 100;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  left: 0;
+  transform: none;
 }
 
 .snapflix-logo:hover {
@@ -25,9 +30,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   visibility: visible !important;
   opacity: 1 !important;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
 }
 
 /* Play Button Icon */
@@ -158,24 +167,24 @@
 
 /* Size Variations */
 .snapflix-logo.small {
-  transform: scale(1.2);
+  transform: scale(0.8);
 }
 
 .snapflix-logo.small .play-button-icon {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
 }
 
 .snapflix-logo.small .logo-text {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .snapflix-logo.medium .logo-text {
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .snapflix-logo.large {
-  transform: scale(1.5);
+  transform: scale(1.2);
 }
 
 .snapflix-logo.large .play-button-icon {
@@ -184,7 +193,46 @@
 }
 
 .snapflix-logo.large .logo-text {
-  font-size: 24px;
+  font-size: 32px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .snapflix-logo.medium {
+    transform: scale(0.7);
+  }
+  
+  .snapflix-logo.medium .play-button-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .snapflix-logo.medium .logo-text {
+    font-size: 18px;
+  }
+  
+  .snapflix-logo.medium .logo-container {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .snapflix-logo.medium {
+    transform: scale(0.6);
+  }
+  
+  .snapflix-logo.medium .play-button-icon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .snapflix-logo.medium .logo-text {
+    font-size: 16px;
+  }
+  
+  .snapflix-logo.medium .logo-container {
+    gap: 10px;
+  }
 }
 
 /* Animations */

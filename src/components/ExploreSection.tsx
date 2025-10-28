@@ -7,37 +7,37 @@ const ExploreSection: React.FC = () => {
   const categories = [
     {
       id: 'originals',
-      name: 'The Snapflix Originals',
+      name: 'The Snapflix Video Game Originals',
       icon: '🎮',
       color: '#dc2626'
     },
     {
       id: 'action',
-      name: 'Action',
+      name: 'Action Video Games',
       icon: '🤖',
       color: '#fbbf24'
     },
     {
       id: 'adventure',
-      name: 'Adventure',
+      name: 'Adventure Video Games',
       icon: '🎈',
       color: '#f97316'
     },
     {
       id: 'battle',
-      name: 'Battle Game',
+      name: 'Battle Video Games',
       icon: '✈️',
       color: '#fbbf24'
     },
     {
       id: 'brain',
-      name: 'Brain Tease',
+      name: 'Brain Tease Video Games',
       icon: '🧩',
       color: '#8b5cf6'
     },
     {
       id: 'fighting',
-      name: 'Fighting',
+      name: 'Fighting Video Games',
       icon: '🥋',
       color: '#f59e0b'
     }

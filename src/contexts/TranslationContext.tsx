@@ -158,8 +158,8 @@ const translations = {
     // Homepage Content
     'homepage.carousel.title': 'Discover Amazing Games',
     'homepage.carousel.subtitle': 'Play the latest and greatest games',
-    'homepage.categories.title': 'Game Categories',
-    'homepage.categories.subtitle': 'Explore games by category',
+    'homepage.categories.title': 'Video Game Categories',
+    'homepage.categories.subtitle': 'Explore video games by category',
     'homepage.explore.title': 'Explore More',
     'homepage.explore.subtitle': 'Find your next favorite game',
     'homepage.videos.title': 'Featured Videos',
@@ -316,8 +316,8 @@ const translations = {
     // Homepage Content
     'homepage.carousel.title': '发现精彩游戏',
     'homepage.carousel.subtitle': '玩最新的精彩游戏',
-    'homepage.categories.title': '游戏分类',
-    'homepage.categories.subtitle': '按分类探索游戏',
+    'homepage.categories.title': '视频游戏分类',
+    'homepage.categories.subtitle': '按分类探索视频游戏',
     'homepage.explore.title': '探索更多',
     'homepage.explore.subtitle': '找到您下一个喜爱的游戏',
     'homepage.videos.title': '精选视频',
@@ -474,8 +474,8 @@ const translations = {
     // Homepage Content
     'homepage.carousel.title': 'Découvrez des jeux incroyables',
     'homepage.carousel.subtitle': 'Jouez aux derniers jeux les plus populaires',
-    'homepage.categories.title': 'Catégories de jeux',
-    'homepage.categories.subtitle': 'Explorez les jeux par catégorie',
+    'homepage.categories.title': 'Catégories de jeux vidéo',
+    'homepage.categories.subtitle': 'Explorez les jeux vidéo par catégorie',
     'homepage.explore.title': 'Explorer plus',
     'homepage.explore.subtitle': 'Trouvez votre prochain jeu favori',
     'homepage.videos.title': 'Vidéos en vedette',

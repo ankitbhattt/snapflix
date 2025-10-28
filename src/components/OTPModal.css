@@ -4,14 +4,14 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
   padding: 20px;
-  animation: fadeIn 0.3s ease-out;
+  animation: none !important;
 }
 
 @keyframes fadeIn {
@@ -33,9 +33,9 @@
   box-shadow: 
     0 25px 50px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.05);
-  animation: slideInUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: none !important;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Hide scrollbars in OTP modal */
@@ -100,16 +100,30 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .snapflix-logo-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px auto;
-  transform: scale(0.7);
+  margin: 0 auto 20px auto;
+  transform: scale(1.2);
   width: 100%;
   text-align: center;
+  position: relative;
+}
+
+.snapflix-logo-container .snapflix-logo {
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.snapflix-logo-container .logo-container {
+  justify-content: center !important;
+  margin: 0 auto !important;
 }
 
 .snapflix-logo-container * {
@@ -186,9 +200,9 @@
 
 .otp-title {
   color: white;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0 0 5px 0;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
 }
 
 .otp-subtitle {
@@ -231,6 +245,7 @@
 
 .otp-inputs-container {
   margin-bottom: 25px;
+  animation: none !important;
 }
 
 .otp-inputs {
@@ -238,6 +253,7 @@
   justify-content: center;
   gap: 15px;
   margin-bottom: 15px;
+  animation: none !important;
 }
 
 .otp-progress {
@@ -248,6 +264,7 @@
   overflow: hidden;
   margin: 0 auto;
   max-width: 200px;
+  animation: none !important;
 }
 
 .progress-bar {
@@ -256,6 +273,7 @@
   border-radius: 2px;
   transition: width 0.3s ease;
   opacity: 0;
+  animation: none !important;
 }
 
 .progress-bar.active {
@@ -265,25 +283,28 @@
 .otp-input {
   width: 50px;
   height: 50px;
-  border: 2px solid #444;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  background-color: #1a1a1a;
-  color: white;
+  background-color: transparent !important;
+  color: white !important;
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
+  outline: none;
 }
 
 .otp-input:focus {
-  outline: none;
-  border-color: #dc2626;
+  border-color: #dc2626 !important;
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  background-color: transparent !important;
+  color: white !important;
 }
 
 .otp-input.filled {
-  border-color: #dc2626;
-  background-color: rgba(220, 38, 38, 0.1);
+  border-color: #dc2626 !important;
+  background-color: transparent !important;
+  color: white !important;
 }
 
 .security-notice {
@@ -433,6 +454,10 @@
   .modal-content {
     padding: 20px;
     max-width: 100%;
+  }
+  
+  .snapflix-logo-container {
+    transform: scale(2.0);
   }
   
   .otp-title {

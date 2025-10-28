@@ -7,6 +7,7 @@ import InteractiveCarousel from './components/InteractiveCarousel';
 import VideoCategories from './components/GameCategories';
 import ExploreSection from './components/ExploreSection';
 import VideosSection from './components/VideosSection';
+import FavoritesSection from './components/FavoritesSection';
 import LoginModal from './components/LoginModal';
 import OTPModal from './components/OTPModal';
 import RewardsPage from './components/RewardsPage';
@@ -16,6 +17,8 @@ import NewsPage from './components/NewsPage';
 import UnsubscribePage from './components/UnsubscribePage';
 import SubscriptionManagementPage from './components/SubscriptionManagementPage';
 import VideosPage from './components/VideosPage';
+import FavoritesPage from './components/FavoritesPage';
+import ExploreVideosPage from './components/ExploreVideosPage';
 import FAQPage from './components/FAQPage';
 import AboutPage from './components/AboutPage';
 import Notification from './components/Notification';
@@ -26,7 +29,7 @@ import FloatingActionButton from './components/FloatingActionButton';
 import Footer from './components/Footer';
 import { TranslationProvider } from './contexts/TranslationContext';
 
-type Page = 'home' | 'rewards' | 'profile' | 'subscription' | 'news' | 'unsubscribe' | 'subscription-management' | 'videos' | 'faq' | 'about';
+type Page = 'home' | 'rewards' | 'profile' | 'subscription' | 'news' | 'unsubscribe' | 'subscription-management' | 'videos' | 'favorites' | 'explore' | 'faq' | 'about';
 
 function AppContent() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -43,6 +46,8 @@ function AppContent() {
   const handleVideoClick = useCallback(() => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
+    } else {
+      setCurrentPage('subscription');
     }
   }, [isLoggedIn]);
 
@@ -110,7 +115,11 @@ function AppContent() {
       case 'subscription-management':
         return <SubscriptionManagementPage onNavigate={handleNavigate} />;
       case 'videos':
-        return <VideosPage />;
+        return <VideosPage onVideoClick={handleVideoClick} />;
+      case 'favorites':
+        return <FavoritesPage onVideoClick={handleVideoClick} />;
+      case 'explore':
+        return <ExploreVideosPage />;
       case 'faq':
         return <FAQPage />;
       case 'about':
@@ -119,7 +128,8 @@ function AppContent() {
         return (
           <>
             <InteractiveCarousel onGameClick={handleVideoClick} />
-            <VideoCategories onVideoClick={handleVideoClick} />
+            <FavoritesSection onVideoClick={handleVideoClick} onNavigate={handleNavigate} />
+            <VideoCategories onVideoClick={handleVideoClick} onNavigate={handleNavigate} />
             <ExploreSection />
             <VideosSection />
           </>

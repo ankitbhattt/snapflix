@@ -4,14 +4,14 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
   padding: 20px;
-  animation: fadeIn 0.3s ease-out;
+  animation: none !important;
 }
 
 @keyframes fadeIn {
@@ -31,7 +31,7 @@
   max-width: 420px;
   position: relative;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-  animation: slideInUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: none !important;
   border: 1px solid #555;
   margin: 0 auto;
 }
@@ -110,14 +110,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .modal-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
-  transform: scale(0.5);
+  margin-bottom: 15px;
+  transform: scale(1.2);
+  width: 100%;
+}
+
+.modal-logo .snapflix-logo {
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.modal-logo .logo-container {
+  justify-content: center !important;
+  margin: 0 auto !important;
 }
 
 .modal-logo * {
@@ -134,9 +149,9 @@
 
 .modal-title {
   color: white;
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 5px 0;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
   text-align: center;
   white-space: nowrap;
 }
@@ -188,31 +203,50 @@
   margin-bottom: 8px;
 }
 
-.phone-input {
-  width: 100%;
-  padding: 16px 20px;
+.phone-input-wrapper {
+  display: flex;
+  align-items: center;
   background: rgba(255, 255, 255, 0.05);
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
+  padding: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.phone-input-wrapper:focus-within {
+  border-color: #dc2626;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.phone-prefix {
+  padding: 16px 12px 16px 20px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.phone-input {
+  flex: 1;
+  padding: 16px 20px;
+  background: transparent;
+  border: none;
   color: white;
   font-size: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
 }
 
+.phone-input:focus {
+  outline: none;
+}
+
 .phone-input::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
 
-.phone-input:focus {
-  outline: none;
-  border-color: #dc2626;
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
-  transform: translateY(-1px);
-}
-
-.phone-input.error {
+.input-group.error .phone-input-wrapper {
   border-color: #ef4444;
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
@@ -409,7 +443,7 @@
   }
   
   .modal-logo {
-    transform: scale(0.5);
+    transform: scale(2.0);
   }
   
   .phone-input {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './OTPModal.css';
+import './ModalLogo.css';
 import SnapflixLogo from './SnapflixLogo';
 
 interface OTPModalProps {
@@ -12,6 +13,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
   const [otp, setOtp] = useState(['', '', '', '']);
   const [timeLeft, setTimeLeft] = useState(120); // 2 minutes
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -69,28 +71,12 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
         
         <div className="otp-header">
           <div className="snapflix-logo-container">
-            <SnapflixLogo size="small" animated={true} />
+            <SnapflixLogo size="medium" animated={false} />
           </div>
           <h2 className="otp-title">Verify Your Phone</h2>
-          <p className="otp-subtitle">Almost there! Complete your verification</p>
           <p className="otp-description">
             Enter the 4-digit code sent to {phoneNumber}
           </p>
-          
-          <div className="verification-features">
-            <div className="feature-item">
-              <span className="feature-icon">📱</span>
-              <span>Secure Login</span>
-            </div>
-            <div className="feature-item">
-              <span className="feature-icon">⚡</span>
-              <span>Quick Setup</span>
-            </div>
-            <div className="feature-item">
-              <span className="feature-icon">🔐</span>
-              <span>Protected Account</span>
-            </div>
-          </div>
         </div>
 
         <div className="otp-inputs-container">
@@ -110,8 +96,8 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
             ))}
           </div>
           <div className="otp-progress">
-            <div className={`progress-bar ${otp.filter(d => d).length > 0 ? 'active' : ''}`} 
-                 style={{width: `${(otp.filter(d => d).length / 4) * 100}%`}}></div>
+            {/* <div className={`progress-bar ${otp.filter(d => d).length > 0 ? 'active' : ''}`} 
+                 style={{width: `${(otp.filter(d => d).length / 4) * 100}%`}}></div> */}
           </div>
         </div>
 
@@ -154,17 +140,6 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
               <path d="M4 10L16 10M10 4L16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          
-          <div className="verification-tips">
-            <div className="tip-item">
-              <span className="tip-icon">💡</span>
-              <span>Check your messages for the code</span>
-            </div>
-            <div className="tip-item">
-              <span className="tip-icon">📞</span>
-              <span>Code expires in 2 minutes</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -10,17 +10,29 @@ interface VideoItem {
 
 interface VideoCategoriesProps {
   onVideoClick: () => void;
+  onNavigate?: (page: string) => void;
 }
 
 interface VideoCardProps {
   video: VideoItem;
   onVideoClick: () => void;
+  onFavorite?: (name: string) => void;
+  isFavorite?: boolean;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, isFavorite }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
+  const [favorite, setFavorite] = useState(isFavorite || false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFavorite(!favorite);
+    if (onFavorite) {
+      onFavorite(video.name);
+    }
+  };
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -66,17 +78,52 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick }) => {
             <span>PREVIEW</span>
           </div>
         </div>
+        <button 
+          className={`favorite-btn ${favorite ? 'active' : ''}`}
+          onClick={handleFavoriteClick}
+          aria-label="Add to favorites"
+        >
+          ❤️
+        </button>
       </div>
       <h3 className="video-title">{video.name}</h3>
     </div>
   );
 };
 
-const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
+const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavigate }) => {
   const { t } = useTranslation();
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  
+  // Load favorites from localStorage
+  useEffect(() => {
+    const storedFavorites = localStorage.getItem('snapflix_favorites');
+    if (storedFavorites) {
+      setFavorites(new Set(JSON.parse(storedFavorites)));
+    }
+  }, []);
+  
+  // Save favorites to localStorage
+  const handleFavorite = (videoName: string) => {
+    const newFavorites = new Set(favorites);
+    if (newFavorites.has(videoName)) {
+      newFavorites.delete(videoName);
+    } else {
+      newFavorites.add(videoName);
+    }
+    setFavorites(newFavorites);
+    localStorage.setItem('snapflix_favorites', JSON.stringify(Array.from(newFavorites)));
+  };
+  
+  const handleViewAll = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onNavigate) {
+      onNavigate('videos');
+    }
+  };
   const categories = [
     {
-      title: "TOP TRENDING VIDEOS",
+      title: "TOP TRENDING VIDEO GAMES",
       games: [
         { name: "Demon Slayer Fight", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/122_-_Demon_slayer_fight_scene_fopfyr.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566575/samples/people/kitchen-bar.jpg" },
         { name: "Jojo Pucci Edit", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/126_-_Jojo_Pucci_Edit_x8przs.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg" },
@@ -85,7 +132,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
       ]
     },
     {
-      title: "ADVENTURE",
+      title: "ADVENTURE VIDEO GAMES",
       games: [
         { name: "Cyberpunk Edit", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/food/dessert.jpg" },
         { name: "OnePiece Quotes", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566575/samples/people/kitchen-bar.jpg" },
@@ -94,7 +141,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
       ]
     },
     {
-      title: "ACTION",
+      title: "ACTION VIDEO GAMES",
       games: [
         { name: "GTA 6 Trailer", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg" },
         { name: "Naruto X Hinata", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/161_-_Naruto_X_hinata_pu2g4g.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg" },
@@ -103,7 +150,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
       ]
     },
     {
-      title: "BRAIN TEASE",
+      title: "BRAIN TEASE VIDEO GAMES",
       games: [
         { name: "Gear 5 Awakening", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/199_-_Gear_5_Awaken_moment_k1mczv.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg" },
         { name: "Dance Video", video: "https://res.cloudinary.com/dbudqhbum/video/upload/samples/dance-2.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg" },
@@ -112,7 +159,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
       ]
     },
     {
-      title: "FIGHTING",
+      title: "FIGHTING VIDEO GAMES",
       games: [
         { name: "Demon Slayer Fight", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/122_-_Demon_slayer_fight_scene_fopfyr.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566575/samples/people/kitchen-bar.jpg" },
         { name: "Jojo Pucci Edit", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/126_-_Jojo_Pucci_Edit_x8przs.mp4", image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566585/samples/two-ladies.jpg" },
@@ -137,7 +184,12 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
         <section key={categoryIndex} className="category-section">
           <div className="category-header">
             <h2 className="category-title">{category.title}</h2>
-            <a href="#" className="view-all-link">View All →</a>
+            <button 
+              className="view-all-btn" 
+              onClick={handleViewAll}
+            >
+              View All →
+            </button>
           </div>
           
           <div className="videos-grid">
@@ -146,6 +198,8 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick }) => {
                 key={videoIndex}
                 video={video}
                 onVideoClick={handleVideoClick}
+                onFavorite={handleFavorite}
+                isFavorite={favorites.has(video.name)}
               />
             ))}
           </div>

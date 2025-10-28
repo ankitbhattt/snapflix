@@ -117,10 +117,22 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
                 {t('header.videos')}
               </button>
               <button 
+                className={`nav-link ${currentPage === 'favorites' ? 'active' : ''}`}
+                onClick={() => handleNavigation('favorites')}
+              >
+                FAVORITES
+              </button>
+              <button 
                 className={`nav-link ${currentPage === 'rewards' ? 'active' : ''}`}
                 onClick={() => handleNavigation('rewards')}
               >
                 {t('header.rewards')}
+              </button>
+              <button 
+                className={`nav-link ${currentPage === 'explore' ? 'active' : ''}`}
+                onClick={() => handleNavigation('explore')}
+              >
+                EXPLORE VIDEOS
               </button>
               <button 
                 className="nav-link search-nav-btn"
@@ -151,11 +163,25 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
                   {t('header.videos')}
                 </button>
                 <button 
+                  className={`mobile-nav-link ${currentPage === 'favorites' ? 'active' : ''}`}
+                  onClick={() => handleNavigation('favorites')}
+                >
+                  <span className="mobile-nav-icon">❤️</span>
+                  FAVORITES
+                </button>
+                <button 
                   className={`mobile-nav-link ${currentPage === 'rewards' ? 'active' : ''}`}
                   onClick={() => handleNavigation('rewards')}
                 >
                   <span className="mobile-nav-icon">🏆</span>
                   {t('header.rewards')}
+                </button>
+                <button 
+                  className={`mobile-nav-link ${currentPage === 'explore' ? 'active' : ''}`}
+                  onClick={() => handleNavigation('explore')}
+                >
+                  <span className="mobile-nav-icon">📺</span>
+                  EXPLORE VIDEOS
                 </button>
                 <button 
                   className={`mobile-nav-link ${currentPage === 'subscription' ? 'active' : ''}`}
