@@ -13,11 +13,11 @@ interface PostLoginHeaderProps {
 const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate, currentPage }) => {
   const { language, setLanguage, t } = useTranslation();
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  // const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const languageRef = useRef<HTMLDivElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
+  // const profileRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const languages = [
@@ -31,29 +31,29 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
     setShowLanguageDropdown(false);
   };
 
-  const handleProfileAction = (action: string) => {
-    setShowProfileDropdown(false);
-    setShowMobileMenu(false);
-    if (action === 'profile' && onNavigate) {
-      onNavigate('profile');
-    } else if (action === 'logout') {
-      onLogout();
-    } else if (action === 'rewards' && onNavigate) {
-      onNavigate('rewards');
-    } else if (action === 'home' && onNavigate) {
-      onNavigate('home');
-    } else if (action === 'help' && onNavigate) {
-      onNavigate('unsubscribe');
-    } else if (action === 'subscriptions' && onNavigate) {
-      onNavigate('subscription-management');
-    } else if (action === 'videos' && onNavigate) {
-      onNavigate('videos');
-    } else if (action === 'faq' && onNavigate) {
-      onNavigate('faq');
-    } else if (action === 'about' && onNavigate) {
-      onNavigate('about');
-    }
-  };
+  // const handleProfileAction = (action: string) => {
+  //   setShowProfileDropdown(false);
+  //   setShowMobileMenu(false);
+  //   if (action === 'profile' && onNavigate) {
+  //     onNavigate('profile');
+  //   } else if (action === 'logout') {
+  //     onLogout();
+  //   } else if (action === 'rewards' && onNavigate) {
+  //     onNavigate('rewards');
+  //   } else if (action === 'home' && onNavigate) {
+  //     onNavigate('home');
+  //   } else if (action === 'help' && onNavigate) {
+  //     onNavigate('unsubscribe');
+  //   } else if (action === 'subscriptions' && onNavigate) {
+  //     onNavigate('subscription-management');
+  //   } else if (action === 'videos' && onNavigate) {
+  //     onNavigate('videos');
+  //   } else if (action === 'faq' && onNavigate) {
+  //     onNavigate('faq');
+  //   } else if (action === 'about' && onNavigate) {
+  //     onNavigate('about');
+  //   }
+  // };
 
   const handleNavigation = (page: string) => {
     if (onNavigate) {
@@ -68,9 +68,9 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
       if (languageRef.current && !languageRef.current.contains(event.target as Node)) {
         setShowLanguageDropdown(false);
       }
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setShowProfileDropdown(false);
-      }
+      // if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+      //   setShowProfileDropdown(false);
+      // }
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
         const target = event.target as HTMLElement;
         if (!target.closest('.mobile-menu-toggle')) {
@@ -204,7 +204,7 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
               
               <div className="mobile-menu-divider"></div>
               
-              <div className="mobile-menu-profile">
+              {/* <div className="mobile-menu-profile">
                 <button className="mobile-nav-link" onClick={() => handleProfileAction('profile')}>
                   <span className="mobile-nav-icon">👤</span>
                   {t('profile.menu.profile')}
@@ -229,7 +229,7 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
                   <span className="mobile-nav-icon">↪️</span>
                   {t('profile.menu.logout')}
                 </button>
-              </div>
+              </div> */}
               
               <div className="mobile-menu-divider"></div>
               
@@ -290,18 +290,18 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
             {t('header.subscribe')}
           </button>
           
-              <div className="profile-dropdown" ref={profileRef}>
-                <button 
-                  className={`action-btn profile-btn ${showProfileDropdown ? 'active' : ''}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setShowProfileDropdown(!showProfileDropdown);
-                  }}
-                >
-                  <span className="profile-icon">👤</span>
-                  <span className="dropdown-arrow">▼</span>
-                </button>
+          {/* <div className="profile-dropdown" ref={profileRef}>
+            <button 
+              className={`action-btn profile-btn ${showProfileDropdown ? 'active' : ''}`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowProfileDropdown(!showProfileDropdown);
+              }}
+            >
+              <span className="profile-icon">👤</span>
+              <span className="dropdown-arrow">▼</span>
+            </button>
             {showProfileDropdown && (
               <div className="profile-menu" style={{ display: 'block' }}>
                 <div className="profile-menu-item" onClick={() => handleProfileAction('profile')}>
@@ -334,7 +334,7 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
       

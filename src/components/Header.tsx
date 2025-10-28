@@ -11,11 +11,11 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
   const { language, setLanguage, t } = useTranslation();
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  // const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const profileRef = useRef<HTMLDivElement>(null);
+  // const profileRef = useRef<HTMLDivElement>(null);
   const languageRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -33,9 +33,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setShowProfileDropdown(false);
-      }
+      // if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+      //   setShowProfileDropdown(false);
+      // }
       if (languageRef.current && !languageRef.current.contains(event.target as Node)) {
         setShowLanguageDropdown(false);
       }
@@ -53,19 +53,19 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
     };
   }, []);
 
-  const handleProfileAction = (action: string) => {
-    setShowProfileDropdown(false);
-    setShowMobileMenu(false);
-    if (action === 'login' && onNavigate) {
-      onNavigate('login');
-    } else if (action === 'videos' && onNavigate) {
-      onNavigate('videos');
-    } else if (action === 'faq' && onNavigate) {
-      onNavigate('faq');
-    } else if (action === 'about' && onNavigate) {
-      onNavigate('about');
-    }
-  };
+  // const handleProfileAction = (action: string) => {
+  //   setShowProfileDropdown(false);
+  //   setShowMobileMenu(false);
+  //   if (action === 'login' && onNavigate) {
+  //     onNavigate('login');
+  //   } else if (action === 'videos' && onNavigate) {
+  //     onNavigate('videos');
+  //   } else if (action === 'faq' && onNavigate) {
+  //     onNavigate('faq');
+  //   } else if (action === 'about' && onNavigate) {
+  //     onNavigate('about');
+  //   }
+  // };
 
   const handleNavigation = (page: string) => {
     if (onNavigate) {
@@ -193,7 +193,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
               
               <div className="mobile-menu-divider"></div>
               
-              <div className="mobile-menu-profile">
+              {/* <div className="mobile-menu-profile">
                 <button className="mobile-nav-link" onClick={() => handleProfileAction('login')}>
                   <span className="mobile-nav-icon">🔑</span>
                   {t('login.title')}
@@ -206,7 +206,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
                   <span className="mobile-nav-icon">ℹ️</span>
                   {t('profile.menu.about')}
                 </button>
-              </div>
+              </div> */}
               
               <div className="mobile-menu-divider"></div>
               
@@ -267,7 +267,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
             {t('header.subscribe')}
           </button>
           
-          <div className="profile-dropdown" ref={profileRef}>
+          {/* <div className="profile-dropdown" ref={profileRef}>
             <button 
               className={`action-btn profile-btn ${showProfileDropdown ? 'active' : ''}`}
               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
@@ -295,7 +295,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
       

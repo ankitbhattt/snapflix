@@ -32,7 +32,7 @@ const SubscriptionPage: React.FC = () => {
       id: 'daily',
       name: 'Daily Pass',
       duration: '1 Day',
-      price: 29,
+      price: 1,
       popular: false,
       features: ['Unlimited Videos', 'HD Quality', 'Mobile Access', 'Ad-Free Experience']
     },
@@ -40,9 +40,9 @@ const SubscriptionPage: React.FC = () => {
       id: 'weekly',
       name: 'Weekly Pass',
       duration: '7 Days',
-      price: 149,
-      originalPrice: 203,
-      discount: '27% OFF',
+      price: 5,
+      originalPrice: 7,
+      discount: '29% OFF',
       popular: false,
       features: ['Unlimited Videos', 'HD Quality', 'Mobile & Desktop', 'Ad-Free Experience', 'Early Access']
     },
@@ -50,9 +50,9 @@ const SubscriptionPage: React.FC = () => {
       id: 'monthly',
       name: 'Monthly Premium',
       duration: '30 Days',
-      price: 399,
-      originalPrice: 899,
-      discount: '56% OFF',
+      price: 3,
+      originalPrice: 5,
+      discount: '40% OFF',
       popular: true,
       features: ['Unlimited Videos', '4K Quality', 'All Devices', 'Ad-Free Experience', 'Early Access', 'Exclusive Content', 'Priority Support']
     }
@@ -155,7 +155,7 @@ const SubscriptionPage: React.FC = () => {
         {/* Header Section */}
         <div className="subscription-header">
           <h1 className="main-title">Choose Your <span className="highlight">Snapflix</span> Plan</h1>
-          <p className="subtitle">Unlock unlimited gaming content and premium features</p>
+          <p className="subtitle">Unlock unlimited video content and premium features</p>
         </div>
 
         {/* Plans Section */}
@@ -177,10 +177,10 @@ const SubscriptionPage: React.FC = () => {
 
                 <div className="plan-pricing">
                   <div className="price-container">
-                    <span className="currency">₹</span>
+                    <span className="currency">SZL</span>
                     <span className="price">{plan.price}</span>
                     {plan.originalPrice && (
-                      <span className="original-price">₹{plan.originalPrice}</span>
+                      <span className="original-price">SZL{plan.originalPrice}</span>
                     )}
                   </div>
                 </div>
@@ -228,7 +228,7 @@ const SubscriptionPage: React.FC = () => {
               <h3>Selected Plan: {selectedPlanData.name}</h3>
               <div className="plan-details">
                 <span>Duration: {selectedPlanData.duration}</span>
-                <span>Price: ₹{selectedPlanData.price}</span>
+                <span>Price: SZL{selectedPlanData.price}</span>
               </div>
             </div>
 
@@ -266,12 +266,12 @@ const SubscriptionPage: React.FC = () => {
                       </div>
                       <div className="summary-item total">
                         <span>Total Amount:</span>
-                        <span>₹{selectedPlanData.price}</span>
+                        <span>SZL{selectedPlanData.price}</span>
                       </div>
                     </div>
                     
                     <button className="final-pay-btn" onClick={handleFinalPayment}>
-                      Pay ₹{selectedPlanData.price}
+                      Pay SZL{selectedPlanData.price}
                     </button>
                   </div>
                 )}
@@ -312,7 +312,7 @@ const SubscriptionPage: React.FC = () => {
                     </div>
                     <div className="amount-info">
                       <span>Amount:</span>
-                      <span>₹{selectedPlanData?.price}</span>
+                      <span>SZL{selectedPlanData?.price}</span>
                     </div>
                     <div className="plan-info">
                       <span>Plan:</span>
@@ -395,7 +395,7 @@ const SubscriptionPage: React.FC = () => {
                     </div>
                     <div className="detail-item">
                       <span>Amount:</span>
-                      <span>₹{selectedPlanData?.price}</span>
+                      <span>SZL{selectedPlanData?.price}</span>
                     </div>
                   </div>
                   <button className="continue-btn" onClick={closePaymentModal}>

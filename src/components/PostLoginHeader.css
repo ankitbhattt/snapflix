@@ -25,7 +25,7 @@
   z-index: 10;
   cursor: pointer;
   transition: transform 0.3s ease;
-  margin-left: -20px;
+  margin-right: 40px;
 }
 
 .logo:hover {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './ExploreVideosPage.css';
 
 interface VideoCategory {
@@ -7,11 +7,14 @@ interface VideoCategory {
   icon: string;
   description: string;
   count: number;
-  thumbnail: string;
+  video: string;
+  image: string;
 }
 
 const ExploreVideosPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
+  const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
   const categories: VideoCategory[] = [
     {
@@ -20,7 +23,8 @@ const ExploreVideosPage: React.FC = () => {
       icon: '💥',
       description: 'Intense combat and thrilling action',
       count: 245,
-      thumbnail: 'https://images.unsplash.com/photo-1556438064-2d7646166914?w=400&h=300&fit=crop'
+      video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4',
+      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg'
     },
     {
       id: 'adventure',
@@ -28,7 +32,8 @@ const ExploreVideosPage: React.FC = () => {
       icon: '🗺️',
       description: 'Epic journeys and discoveries',
       count: 189,
-      thumbnail: 'https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=400&h=300&fit=crop'
+      video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4',
+      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg'
     },
     {
       id: 'strategy',
@@ -36,7 +41,8 @@ const ExploreVideosPage: React.FC = () => {
       icon: '♟️',
       description: 'Tactical gameplay and planning',
       count: 156,
-      thumbnail: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop'
+      video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4',
+      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg'
     },
     {
       id: 'racing',
@@ -44,7 +50,8 @@ const ExploreVideosPage: React.FC = () => {
       icon: '🏎️',
       description: 'High-speed thrills',
       count: 98,
-      thumbnail: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop'
+      video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4',
+      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg'
     },
     {
       id: 'sports',
@@ -52,7 +59,8 @@ const ExploreVideosPage: React.FC = () => {
       icon: '⚽',
       description: 'Virtual sports action',
       count: 124,
-      thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop'
+      video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/148_-_Death_note_edit_rf3xpx.mp4',
+      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg'
     },
     {
       id: 'puzzle',
@@ -60,7 +68,8 @@ const ExploreVideosPage: React.FC = () => {
       icon: '🧩',
       description: 'Brain-teasing challenges',
       count: 142,
-      thumbnail: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop'
+      video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4',
+      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg'
     },
     {
       id: 'horror',
@@ -68,7 +77,8 @@ const ExploreVideosPage: React.FC = () => {
       icon: '👻',
       description: 'Scary and suspenseful',
       count: 87,
-      thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop'
+      video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4',
+      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg'
     },
     {
       id: 'indie',
@@ -76,12 +86,37 @@ const ExploreVideosPage: React.FC = () => {
       icon: '🎨',
       description: 'Creative and unique',
       count: 203,
-      thumbnail: 'https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&h=300&fit=crop'
+      video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4',
+      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg'
     }
   ];
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
+  };
+
+  const handleVideoHover = (categoryId: string) => {
+    setHoveredVideo(categoryId);
+    const video = videoRefs.current[categoryId];
+    if (video) {
+      video.currentTime = 0;
+      video.play().catch((err) => {
+        console.log('Video play failed:', err);
+      });
+    }
+  };
+
+  const handleVideoLeave = (categoryId: string) => {
+    setHoveredVideo(null);
+    const video = videoRefs.current[categoryId];
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+  };
+
+  const setVideoRef = (categoryId: string) => (el: HTMLVideoElement | null) => {
+    videoRefs.current[categoryId] = el;
   };
 
   return (
@@ -102,9 +137,21 @@ const ExploreVideosPage: React.FC = () => {
             key={category.id}
             className={`category-card ${selectedCategory === category.id ? 'selected' : ''}`}
             onClick={() => handleCategoryClick(category.id)}
+            onMouseEnter={() => handleVideoHover(category.id)}
+            onMouseLeave={() => handleVideoLeave(category.id)}
           >
-            <div className="category-thumbnail" style={{ backgroundImage: `url(${category.thumbnail})` }}>
-              <div className="category-overlay">
+            <div className="category-thumbnail">
+              <video
+                ref={setVideoRef(category.id)}
+                src={category.video}
+                muted
+                playsInline
+                loop
+                preload="metadata"
+                className={`category-video ${hoveredVideo === category.id ? 'playing' : ''}`}
+                style={{ backgroundImage: `url(${category.image})` }}
+              />
+              <div className={`category-overlay ${hoveredVideo === category.id ? 'video-active' : ''}`}>
                 <span className="category-icon">{category.icon}</span>
               </div>
               <div className="video-count-badge">
@@ -126,9 +173,16 @@ const ExploreVideosPage: React.FC = () => {
         <div className="category-videos-preview">
           <h2 className="preview-title">Popular in {categories.find(c => c.id === selectedCategory)?.name}</h2>
           <div className="preview-grid">
-            {[...Array(6)].map((_, index) => (
+            {categories.slice(0, 6).map((category, index) => (
               <div key={index} className="preview-video-card">
-                <div className="preview-thumbnail"></div>
+                <video
+                  src={category.video}
+                  muted
+                  playsInline
+                  loop
+                  preload="metadata"
+                  className="preview-thumbnail"
+                />
                 <div className="preview-info">
                   <div className="preview-play-btn">▶</div>
                   <span className="preview-duration">5:32</span>
