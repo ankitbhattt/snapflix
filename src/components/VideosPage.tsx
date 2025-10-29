@@ -18,8 +18,19 @@ interface VideosPageProps {
 const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [hoveredVideo, setHoveredVideo] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
   const touchTimersRef = useRef<{ [key: number]: ReturnType<typeof setTimeout> | null }>({});
+
+  useEffect(() => {
+    // Safely detect mobile once on mount
+    const checkMobile = () => {
+      if (typeof window !== 'undefined' && window.innerWidth) {
+        setIsMobile(window.innerWidth <= 768);
+      }
+    };
+    checkMobile();
+  }, []);
 
   const allVideos: VideoItem[] = [
     { id: 1, title: 'GTA 6 Trailer', category: 'trailers', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg', views: '12.5M', timeAgo: '1 week ago' },
@@ -211,7 +222,7 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
                   muted
                   playsInline
                   loop
-                  preload={window.innerWidth <= 768 ? "none" : "metadata"}
+                  preload={isMobile ? "none" : "metadata"}
                   onLoadedMetadata={() => handleVideoLoaded(video.id)}
                   className={`video-preview ${hoveredVideo === video.id ? 'playing' : ''}`}
                 />

@@ -21,8 +21,16 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const [showVideo, setShowVideo] = useState(true);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [hoverTimer, setHoverTimer] = useState<NodeJS.Timeout | null>(null);
   const [videoTimer, setVideoTimer] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Safely detect mobile once on mount
+    if (typeof window !== 'undefined' && window.innerWidth) {
+      setIsMobile(window.innerWidth <= 768);
+    }
+  }, []);
   const [touchTimer, setTouchTimer] = useState<NodeJS.Timeout | null>(null);
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const moreInfoRef = React.useRef<HTMLDivElement>(null);
@@ -86,12 +94,11 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     if (!isAutoPlaying) return;
     
     // Disable auto-advance on mobile to prevent performance issues
-    const isMobile = window.innerWidth <= 768;
     if (isMobile) return;
 
     const interval = setInterval(nextSlide, 4000);
     return () => clearInterval(interval);
-  }, [nextSlide, isAutoPlaying]);
+  }, [nextSlide, isAutoPlaying, isMobile]);
 
   // Start video when slide changes (only on hover)
   useEffect(() => {
@@ -317,7 +324,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
               muted
               playsInline
               loop={false}
-              preload={window.innerWidth <= 768 ? "none" : "metadata"}
+              preload={isMobile ? "none" : "metadata"}
             />
             <div className="media-overlay video-active">
               <div className="video-preview-badge">

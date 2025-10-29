@@ -15,7 +15,15 @@ interface FavoritesSectionProps {
 
 const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNavigate }) => {
   const [favoriteVideos, setFavoriteVideos] = useState<VideoItem[]>([]);
-  
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Safely detect mobile once on mount
+    if (typeof window !== 'undefined' && window.innerWidth) {
+      setIsMobile(window.innerWidth <= 768);
+    }
+  }, []);
+
   useEffect(() => {
     const loadFavorites = () => {
       const stored = localStorage.getItem('snapflix_favorites');
@@ -92,7 +100,7 @@ const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNav
                 muted
                 playsInline
                 loop
-                preload={window.innerWidth <= 768 ? "none" : "metadata"}
+                preload={isMobile ? "none" : "metadata"}
               />
               <div className="favorite-overlay">
                 <span className="favorite-badge">❤️ FAVORITE</span>

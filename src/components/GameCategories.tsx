@@ -24,8 +24,16 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   const [isHovered, setIsHovered] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
   const [favorite, setFavorite] = useState(isFavorite || false);
+  const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const touchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    // Safely detect mobile once on mount
+    if (typeof window !== 'undefined' && window.innerWidth) {
+      setIsMobile(window.innerWidth <= 768);
+    }
+  }, []);
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -140,7 +148,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
           muted
           playsInline
           loop={false}
-          preload={window.innerWidth <= 768 ? "none" : "metadata"}
+          preload={isMobile ? "none" : "metadata"}
           onLoadedMetadata={() => {
             if (videoRef.current && !isHovered) {
               videoRef.current.currentTime = 0.1;
