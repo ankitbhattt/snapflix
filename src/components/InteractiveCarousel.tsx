@@ -55,7 +55,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
       title: "Cyberpunk Edit",
       video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4",
       description: "Futuristic cyberpunk action",
-      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1551808525-51a94da548ce?w=800&auto=format&fit=crop"
     },
     {
       id: 4,
