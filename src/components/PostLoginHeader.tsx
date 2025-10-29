@@ -155,6 +155,17 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
                 <span className="search-nav-icon">🔍</span>
                 Search
               </button>
+              <button 
+                className="nav-link"
+                onClick={() => {
+                  onLogout();
+                  if (onNavigate) {
+                    onNavigate('home');
+                  }
+                }}
+              >
+                LOGOUT
+              </button>
             </nav>
         
         {/* Mobile Menu */}
@@ -213,6 +224,19 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
                 >
                   <span className="mobile-nav-icon">🔍</span>
                   Search
+                </button>
+                <button 
+                  className="mobile-nav-link"
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    onLogout();
+                    if (onNavigate) {
+                      onNavigate('home');
+                    }
+                  }}
+                >
+                  <span className="mobile-nav-icon">↪️</span>
+                  LOGOUT
                 </button>
               </div>
               

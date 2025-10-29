@@ -92,7 +92,7 @@ const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNav
                 muted
                 playsInline
                 loop
-                preload="metadata"
+                preload={window.innerWidth <= 768 ? "none" : "metadata"}
               />
               <div className="favorite-overlay">
                 <span className="favorite-badge">❤️ FAVORITE</span>

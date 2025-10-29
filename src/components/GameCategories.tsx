@@ -38,9 +38,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   const playVideo = () => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch((err) => {
-        console.log('Video play failed:', err);
-      });
+      videoRef.current.play().catch(() => {});
     }
   };
 
@@ -142,7 +140,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
           muted
           playsInline
           loop={false}
-          preload="metadata"
+          preload={window.innerWidth <= 768 ? "none" : "metadata"}
           onLoadedMetadata={() => {
             if (videoRef.current && !isHovered) {
               videoRef.current.currentTime = 0.1;

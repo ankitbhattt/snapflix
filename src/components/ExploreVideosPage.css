@@ -114,6 +114,12 @@
   animation: bounce 2s infinite;
 }
 
+@media (max-width: 768px) {
+  .category-icon {
+    animation: none; /* Disabled on mobile for performance */
+  }
+}
+
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -136,7 +142,7 @@
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 

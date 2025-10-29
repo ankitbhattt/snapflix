@@ -84,6 +84,10 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
 
   useEffect(() => {
     if (!isAutoPlaying) return;
+    
+    // Disable auto-advance on mobile to prevent performance issues
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return;
 
     const interval = setInterval(nextSlide, 4000);
     return () => clearInterval(interval);
@@ -93,9 +97,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   useEffect(() => {
     if (videoRef.current && isHovered) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch((err) => {
-        console.log('Video play failed:', err);
-      });
+      videoRef.current.play().catch(() => {});
     }
   }, [currentIndex, isHovered]);
 
@@ -132,9 +134,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     // Start video immediately on hover
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch((err) => {
-        console.log('Video play failed:', err);
-      });
+      videoRef.current.play().catch(() => {});
     }
   };
 
@@ -167,9 +167,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
       video.currentTime = 0;
       const playPromise = video.play();
       if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.log('Video play failed:', err);
-        });
+        playPromise.catch(() => {});
       }
     }
     
@@ -319,10 +317,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
               muted
               playsInline
               loop={false}
-              preload="metadata"
-              onError={(e) => console.log('Video error:', e)}
-              onLoadStart={() => console.log('Video loading started')}
-              onCanPlay={() => console.log('Video can play')}
+              preload={window.innerWidth <= 768 ? "none" : "metadata"}
             />
             <div className="media-overlay video-active">
               <div className="video-preview-badge">

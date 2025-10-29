@@ -100,9 +100,7 @@ const ExploreVideosPage: React.FC = () => {
     const video = videoRefs.current[categoryId];
     if (video) {
       video.currentTime = 0;
-      video.play().catch((err) => {
-        console.log('Video play failed:', err);
-      });
+      video.play().catch(() => {});
     }
   };
 
@@ -147,7 +145,7 @@ const ExploreVideosPage: React.FC = () => {
                 muted
                 playsInline
                 loop
-                preload="metadata"
+                preload={window.innerWidth <= 768 ? "none" : "metadata"}
                 className={`category-video ${hoveredVideo === category.id ? 'playing' : ''}`}
                 style={{ backgroundImage: `url(${category.image})` }}
               />

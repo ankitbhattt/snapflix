@@ -144,6 +144,12 @@
   will-change: transform;
 }
 
+@media (max-width: 768px) {
+  .video-card {
+    will-change: auto; /* Disable will-change on mobile for performance */
+  }
+}
+
 .video-card::before {
   content: '';
   position: absolute;
@@ -238,6 +244,12 @@
     pointer-events: none;
     will-change: opacity, transform;
     z-index: 2;
+  }
+  
+  @media (max-width: 768px) {
+    .video-card video {
+      will-change: auto; /* Disable will-change on mobile for performance */
+    }
   }
 
   .video-element.visible {

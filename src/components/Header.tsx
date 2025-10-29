@@ -144,6 +144,12 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
             <span className="search-nav-icon">🔍</span>
             Search
           </button>
+          <button 
+            className="nav-link"
+            onClick={() => handleNavigation('login')}
+          >
+            LOGIN
+          </button>
         </nav>
         
         {/* Mobile Menu */}
@@ -202,6 +208,13 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
                 >
                   <span className="mobile-nav-icon">🔍</span>
                   Search
+                </button>
+                <button 
+                  className="mobile-nav-link"
+                  onClick={() => handleNavigation('login')}
+                >
+                  <span className="mobile-nav-icon">🔑</span>
+                  LOGIN
                 </button>
               </div>
               

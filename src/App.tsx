@@ -137,7 +137,8 @@ function AppContent() {
 
   return (
     <div className="App" data-theme={currentTheme}>
-      <SimpleParticleBackground />
+      {/* Particle background disabled for performance - was causing crashes */}
+      {/* <SimpleParticleBackground /> */}
       
       {isLoggedIn ? (
         <PostLoginHeader 

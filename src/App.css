@@ -253,8 +253,29 @@ button:active::before {
 }
 
 @media (max-width: 768px) {
+  /* CRITICAL: Disable ALL animations on mobile to prevent crashes */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.1s !important;
+    transition-delay: 0s !important;
+  }
+  
+  /* Remove scroll animation */
+  html {
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable body scroll indicator animation */
+  body::before {
+    display: none !important;
+  }
+  
   .App {
     padding-top: 0;
+    animation: none !important;
   }
   
   .container {

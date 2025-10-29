@@ -211,7 +211,7 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
                   muted
                   playsInline
                   loop
-                  preload="metadata"
+                  preload={window.innerWidth <= 768 ? "none" : "metadata"}
                   onLoadedMetadata={() => handleVideoLoaded(video.id)}
                   className={`video-preview ${hoveredVideo === video.id ? 'playing' : ''}`}
                 />

@@ -160,6 +160,11 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+  /* Hide FAB completely on mobile for performance */
+  .fab-container {
+    display: none !important;
+  }
+  
   .fab-container {
     bottom: 20px;
     right: 20px;

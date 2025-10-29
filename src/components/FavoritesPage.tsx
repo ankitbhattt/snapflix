@@ -43,9 +43,8 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ onVideoClick }) => {
     
     loadFavorites();
     
-    const interval = setInterval(loadFavorites, 1000);
-    
-    return () => clearInterval(interval);
+    // Removed setInterval - was causing performance issues
+    // Favorites will load on mount and when component re-renders
   }, []);
 
   const handleRemoveFavorite = (videoName: string) => {
