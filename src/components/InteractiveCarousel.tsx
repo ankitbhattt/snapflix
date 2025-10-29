@@ -197,10 +197,8 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   };
 
   const handleCarouselClick = () => {
-    // Call onGameClick to open login modal or navigate
-    onGameClick();
-    
-    // On mobile, ensure video plays on click as well
+    // On mobile, ensure video plays on click as well (don't open login modal on carousel click)
+    // Login modal should only open when clicking the play button
     if (!isHovered) {
       setIsHovered(true);
       setIsAutoPlaying(false);

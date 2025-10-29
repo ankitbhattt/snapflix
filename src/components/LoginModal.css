@@ -26,7 +26,7 @@
 .modal-content {
   background: #2d2d2d !important;
   border-radius: 16px;
-  padding: 35px;
+  padding: 50px 35px 35px 35px;
   width: 100%;
   max-width: 420px;
   position: relative;
@@ -77,8 +77,8 @@
 
 .close-button {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 15px;
+  right: 15px;
   background: rgba(0, 0, 0, 0.8);
   border: 2px solid rgba(255, 255, 255, 0.5);
   color: white;
@@ -95,6 +95,7 @@
   font-weight: bold;
   z-index: 10001;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
 }
 
 .close-button:hover {
@@ -112,6 +113,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  position: relative;
+  padding-top: 0;
 }
 
 .modal-logo {
@@ -121,18 +124,25 @@
   margin-bottom: 15px;
   transform: scale(1.2);
   width: 100%;
+  position: relative;
+  left: 0;
+  right: 0;
 }
 
 .modal-logo .snapflix-logo {
   margin: 0 auto;
-  display: block;
+  display: inline-block;
   text-align: center;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
 }
 
 .modal-logo .logo-container {
   justify-content: center !important;
   margin: 0 auto !important;
+  width: auto !important;
+  max-width: 100%;
+  display: flex !important;
 }
 
 .modal-logo * {
@@ -443,7 +453,7 @@
   }
   
   .modal-logo {
-    transform: scale(2.0);
+    transform: scale(1.5);
   }
   
   .phone-input {
@@ -480,7 +490,24 @@
   }
   
   .modal-logo {
-    transform: scale(0.4);
+    transform: scale(2.0);
+    margin-bottom: 20px;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  
+  .modal-logo .snapflix-logo {
+    width: auto !important;
+    max-width: calc(100% - 60px);
+  }
+  
+  .modal-logo .logo-container {
+    width: auto !important;
+    max-width: 100%;
+  }
+  
+  .modal-content {
+    padding-top: 50px;
   }
   
   .phone-input {
