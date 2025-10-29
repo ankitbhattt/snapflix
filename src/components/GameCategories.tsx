@@ -22,7 +22,7 @@ interface VideoCardProps {
 
 const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, isFavorite }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [showVideo, setShowVideo] = useState(true);
+  const [showVideo, setShowVideo] = useState(false); // Start with false - use image instead
   const [favorite, setFavorite] = useState(isFavorite || false);
   const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -44,6 +44,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   };
 
   const playVideo = () => {
+    setShowVideo(true); // Show video element instead of image
     const videoEl = videoRef.current;
     if (videoEl) {
       // Lazy load: set src only when hovered/interacted
@@ -60,6 +61,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
     }
+    setShowVideo(false); // Hide video, show image again
   };
 
   const handleMouseEnter = () => {
@@ -150,22 +152,30 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
       onTouchEnd={handleTouchEnd}
     >
       <div className="video-image-container">
-        <video
-          ref={videoRef}
-          data-src={video.video}
-          className="video-element visible"
-          muted
-          playsInline
-          loop={false}
-          preload="none"
-          poster={video.image}
-          onLoadedMetadata={() => {
-            if (videoRef.current && !isHovered) {
-              videoRef.current.currentTime = 0.1;
-              videoRef.current.pause();
-            }
-          }}
-        />
+        {!showVideo && (
+          <img
+            src={video.image}
+            alt={video.name}
+            className="video-image"
+          />
+        )}
+        {showVideo && (
+          <video
+            ref={videoRef}
+            data-src={video.video}
+            className="video-element visible"
+            muted
+            playsInline
+            loop={false}
+            preload="none"
+            onLoadedMetadata={() => {
+              if (videoRef.current && !isHovered) {
+                videoRef.current.currentTime = 0.1;
+                videoRef.current.pause();
+              }
+            }}
+          />
+        )}
         <div className="video-overlay video-active">
           <div className="video-preview-badge">
             <span className="preview-dot"></span>

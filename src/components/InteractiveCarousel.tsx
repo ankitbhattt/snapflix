@@ -18,7 +18,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [showVideo, setShowVideo] = useState(true);
+  const [showVideo, setShowVideo] = useState(false); // Start with false - use image instead
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -142,6 +142,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const handleMouseEnter = () => {
     setIsHovered(true);
     setIsAutoPlaying(false);
+    setShowVideo(true); // Show video element instead of image
     
     // Start video immediately on hover - load src if not loaded
     const video = videoRef.current;
@@ -158,6 +159,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const handleMouseLeave = () => {
     setIsHovered(false);
     setIsAutoPlaying(true);
+    setShowVideo(false); // Hide video, show image again
     
     if (hoverTimer) {
       clearTimeout(hoverTimer);
@@ -177,6 +179,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const handleTouchStart = () => {
     setIsHovered(true);
     setIsAutoPlaying(false);
+    setShowVideo(true); // Show video element instead of image
     
     // Start video immediately on touch - load src if not loaded
     const video = videoRef.current;
@@ -196,15 +199,16 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     if (touchTimer) {
       clearTimeout(touchTimer);
     }
-    const timer = setTimeout(() => {
-      setIsHovered(false);
-      setIsAutoPlaying(true);
-      if (videoRef.current) {
-        videoRef.current.pause();
-        videoRef.current.currentTime = 0;
-      }
-    }, 5000);
-    setTouchTimer(timer);
+      const timer = setTimeout(() => {
+        setIsHovered(false);
+        setIsAutoPlaying(true);
+        setShowVideo(false); // Hide video after touch timeout
+        if (videoRef.current) {
+          videoRef.current.pause();
+          videoRef.current.currentTime = 0;
+        }
+      }, 5000);
+      setTouchTimer(timer);
   };
 
   const handleTouchEnd = () => {
@@ -330,17 +334,25 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
           </div>
           
           <div className="slide-media">
-            <video
-              key={`video-${currentIndex}`}
-              ref={videoRef}
-              data-src={currentItem.video}
-              className="slide-video-element visible"
-              muted
-              playsInline
-              loop={false}
-              preload="none"
-              poster={currentItem.image}
-            />
+            {!showVideo && (
+              <img
+                src={currentItem.image}
+                alt={currentItem.title}
+                className="slide-image-element"
+              />
+            )}
+            {showVideo && (
+              <video
+                key={`video-${currentIndex}`}
+                ref={videoRef}
+                data-src={currentItem.video}
+                className="slide-video-element visible"
+                muted
+                playsInline
+                loop={false}
+                preload="none"
+              />
+            )}
             <div className="media-overlay video-active">
               <div className="video-preview-badge">
                 <span className="preview-dot"></span>

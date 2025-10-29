@@ -26,6 +26,23 @@
   animation: shimmer 2s ease-in-out infinite;
 }
 
+/* Disable animations on mobile for performance */
+@media (max-width: 768px) {
+  .snapflix-logo.animated .play-button-icon {
+    animation: none !important;
+    filter: none !important;
+  }
+  
+  .snapflix-logo.animated .s-curve {
+    animation: none !important;
+  }
+  
+  .snapflix-logo.animated .gradient-blue,
+  .snapflix-logo.animated .gradient-red-orange {
+    animation: none !important;
+  }
+}
+
 .logo-container {
   display: flex;
   flex-direction: row;

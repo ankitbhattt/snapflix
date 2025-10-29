@@ -95,23 +95,52 @@ const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNav
             onClick={onVideoClick}
           >
             <div className="favorite-video-container">
-              <video
-                data-src={video.video}
-                muted
-                playsInline
-                loop
-                preload="none"
-                poster={video.image}
+              <img
+                src={video.image}
+                alt={video.name}
+                className="favorite-thumbnail"
                 onMouseEnter={(e) => {
-                  // Lazy load on hover
-                  if (!e.currentTarget.src && e.currentTarget.dataset.src) {
-                    e.currentTarget.src = e.currentTarget.dataset.src;
+                  const container = e.currentTarget.parentElement;
+                  if (container && !container.querySelector('video')) {
+                    const img = e.currentTarget;
+                    const videoEl = document.createElement('video');
+                    videoEl.src = video.video;
+                    videoEl.className = 'favorite-video-element';
+                    videoEl.muted = true;
+                    videoEl.playsInline = true;
+                    videoEl.loop = true;
+                    videoEl.preload = 'none';
+                    videoEl.style.width = '100%';
+                    videoEl.style.height = '100%';
+                    videoEl.style.objectFit = 'cover';
+                    videoEl.style.position = 'absolute';
+                    videoEl.style.top = '0';
+                    videoEl.style.left = '0';
+                    videoEl.onloadeddata = () => videoEl.play().catch(() => {});
+                    container.appendChild(videoEl);
+                    img.style.display = 'none';
                   }
                 }}
                 onTouchStart={(e) => {
-                  // Lazy load on touch
-                  if (!e.currentTarget.src && e.currentTarget.dataset.src) {
-                    e.currentTarget.src = e.currentTarget.dataset.src;
+                  const container = e.currentTarget.parentElement;
+                  if (container && !container.querySelector('video')) {
+                    const img = e.currentTarget;
+                    const videoEl = document.createElement('video');
+                    videoEl.src = video.video;
+                    videoEl.className = 'favorite-video-element';
+                    videoEl.muted = true;
+                    videoEl.playsInline = true;
+                    videoEl.loop = true;
+                    videoEl.preload = 'none';
+                    videoEl.style.width = '100%';
+                    videoEl.style.height = '100%';
+                    videoEl.style.objectFit = 'cover';
+                    videoEl.style.position = 'absolute';
+                    videoEl.style.top = '0';
+                    videoEl.style.left = '0';
+                    videoEl.onloadeddata = () => videoEl.play().catch(() => {});
+                    container.appendChild(videoEl);
+                    img.style.display = 'none';
                   }
                 }}
               />
