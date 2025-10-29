@@ -107,6 +107,10 @@ const ExploreVideosPage: React.FC = () => {
     setHoveredVideo(categoryId);
     const video = videoRefs.current[categoryId];
     if (video) {
+      // Lazy load: set src only when hovered
+      if (!video.src && video.dataset.src) {
+        video.src = video.dataset.src;
+      }
       video.currentTime = 0;
       video.play().catch(() => {});
     }
@@ -149,11 +153,12 @@ const ExploreVideosPage: React.FC = () => {
             <div className="category-thumbnail">
               <video
                 ref={setVideoRef(category.id)}
-                src={category.video}
+                data-src={category.video}
                 muted
                 playsInline
                 loop
-                preload={isMobile ? "none" : "metadata"}
+                preload="none"
+                poster={category.image}
                 className={`category-video ${hoveredVideo === category.id ? 'playing' : ''}`}
                 style={{ backgroundImage: `url(${category.image})` }}
               />

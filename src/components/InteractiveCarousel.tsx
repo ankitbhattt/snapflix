@@ -102,9 +102,14 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
 
   // Start video when slide changes (only on hover)
   useEffect(() => {
-    if (videoRef.current && isHovered) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
+    const video = videoRef.current;
+    if (video && isHovered) {
+      // Lazy load: set src if not loaded
+      if (!video.src && video.dataset.src) {
+        video.src = video.dataset.src;
+      }
+      video.currentTime = 0;
+      video.play().catch(() => {});
     }
   }, [currentIndex, isHovered]);
 
@@ -138,10 +143,15 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     setIsHovered(true);
     setIsAutoPlaying(false);
     
-    // Start video immediately on hover
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
+    // Start video immediately on hover - load src if not loaded
+    const video = videoRef.current;
+    if (video) {
+      // Lazy load: set src only when hovered/interacted
+      if (!video.src && video.dataset.src) {
+        video.src = video.dataset.src;
+      }
+      video.currentTime = 0;
+      video.play().catch(() => {});
     }
   };
 
@@ -168,9 +178,13 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     setIsHovered(true);
     setIsAutoPlaying(false);
     
-    // Start video immediately on touch
+    // Start video immediately on touch - load src if not loaded
     const video = videoRef.current;
     if (video) {
+      // Lazy load: set src only when touched
+      if (!video.src && video.dataset.src) {
+        video.src = video.dataset.src;
+      }
       video.currentTime = 0;
       const playPromise = video.play();
       if (playPromise !== undefined) {
@@ -319,12 +333,13 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
             <video
               key={`video-${currentIndex}`}
               ref={videoRef}
-              src={currentItem.video}
+              data-src={currentItem.video}
               className="slide-video-element visible"
               muted
               playsInline
               loop={false}
-              preload={isMobile ? "none" : "metadata"}
+              preload="none"
+              poster={currentItem.image}
             />
             <div className="media-overlay video-active">
               <div className="video-preview-badge">

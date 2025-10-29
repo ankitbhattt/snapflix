@@ -96,11 +96,24 @@ const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNav
           >
             <div className="favorite-video-container">
               <video
-                src={video.video}
+                data-src={video.video}
                 muted
                 playsInline
                 loop
-                preload={isMobile ? "none" : "metadata"}
+                preload="none"
+                poster={video.image}
+                onMouseEnter={(e) => {
+                  // Lazy load on hover
+                  if (!e.currentTarget.src && e.currentTarget.dataset.src) {
+                    e.currentTarget.src = e.currentTarget.dataset.src;
+                  }
+                }}
+                onTouchStart={(e) => {
+                  // Lazy load on touch
+                  if (!e.currentTarget.src && e.currentTarget.dataset.src) {
+                    e.currentTarget.src = e.currentTarget.dataset.src;
+                  }
+                }}
               />
               <div className="favorite-overlay">
                 <span className="favorite-badge">❤️ FAVORITE</span>

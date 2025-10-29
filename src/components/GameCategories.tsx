@@ -44,9 +44,14 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   };
 
   const playVideo = () => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
+    const videoEl = videoRef.current;
+    if (videoEl) {
+      // Lazy load: set src only when hovered/interacted
+      if (!videoEl.src && videoEl.dataset.src) {
+        videoEl.src = videoEl.dataset.src;
+      }
+      videoEl.currentTime = 0;
+      videoEl.play().catch(() => {});
     }
   };
 
@@ -76,9 +81,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
       clearTimeout(touchTimerRef.current);
     }
     
-    // Play video on touch
+    // Play video on touch - lazy load src
     const video = videoRef.current;
     if (video) {
+      // Lazy load: set src only when touched
+      if (!video.src && video.dataset.src) {
+        video.src = video.dataset.src;
+      }
       video.currentTime = 0;
       const playPromise = video.play();
       if (playPromise !== undefined) {
@@ -143,12 +152,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
       <div className="video-image-container">
         <video
           ref={videoRef}
-          src={video.video}
+          data-src={video.video}
           className="video-element visible"
           muted
           playsInline
           loop={false}
-          preload={isMobile ? "none" : "metadata"}
+          preload="none"
+          poster={video.image}
           onLoadedMetadata={() => {
             if (videoRef.current && !isHovered) {
               videoRef.current.currentTime = 0.1;

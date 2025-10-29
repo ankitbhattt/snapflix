@@ -64,6 +64,10 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
   const playVideo = (videoId: number) => {
     const video = videoRefs.current[videoId];
     if (video) {
+      // Lazy load: set src only when hovered/touched
+      if (!video.src && video.dataset.src) {
+        video.src = video.dataset.src;
+      }
       if (video.readyState >= 2) {
         video.currentTime = 0;
         video.play().catch(() => {});
@@ -111,9 +115,13 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
       clearTimeout(existingTimer);
     }
     
-    // Play video on touch
+    // Play video on touch - lazy load src
     const video = videoRefs.current[videoId];
     if (video) {
+      // Lazy load: set src only when touched
+      if (!video.src && video.dataset.src) {
+        video.src = video.dataset.src;
+      }
       video.currentTime = 0;
       const playPromise = video.play();
       if (playPromise !== undefined) {
@@ -218,11 +226,12 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
               <div className="video-wrapper">
                 <video
                   ref={setVideoRef(video.id)}
-                  src={video.video}
+                  data-src={video.video}
                   muted
                   playsInline
                   loop
-                  preload={isMobile ? "none" : "metadata"}
+                  preload="none"
+                  poster={video.image}
                   onLoadedMetadata={() => handleVideoLoaded(video.id)}
                   className={`video-preview ${hoveredVideo === video.id ? 'playing' : ''}`}
                 />

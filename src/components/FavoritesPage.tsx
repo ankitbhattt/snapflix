@@ -86,11 +86,24 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ onVideoClick }) => {
           <div key={index} className="favorite-card-page" onClick={onVideoClick}>
             <div className="favorite-video-container-page">
               <video
-                src={video.video}
+                data-src={video.video}
                 muted
                 playsInline
                 loop
-                preload="metadata"
+                preload="none"
+                poster={video.image}
+                onMouseEnter={(e) => {
+                  // Lazy load on hover
+                  if (!e.currentTarget.src && e.currentTarget.dataset.src) {
+                    e.currentTarget.src = e.currentTarget.dataset.src;
+                  }
+                }}
+                onTouchStart={(e) => {
+                  // Lazy load on touch
+                  if (!e.currentTarget.src && e.currentTarget.dataset.src) {
+                    e.currentTarget.src = e.currentTarget.dataset.src;
+                  }
+                }}
               />
               <button 
                 className="remove-favorite-btn"
