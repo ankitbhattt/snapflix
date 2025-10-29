@@ -253,8 +253,12 @@ button:active::before {
 }
 
 @media (max-width: 768px) {
+  .App {
+    padding-top: 0;
+  }
+  
   .container {
-    padding: 0 15px;
+    padding: 0 12px;
   }
   
   .page-navigation {
@@ -265,6 +269,12 @@ button:active::before {
   .nav-btn {
     padding: 8px 16px;
     font-size: 12px;
+  }
+  
+  /* Mobile homepage spacing */
+  .hero-section,
+  .interactive-carousel {
+    margin-top: 0;
   }
 }
 

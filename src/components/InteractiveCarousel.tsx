@@ -23,6 +23,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const [isHovered, setIsHovered] = useState(false);
   const [hoverTimer, setHoverTimer] = useState<NodeJS.Timeout | null>(null);
   const [videoTimer, setVideoTimer] = useState<NodeJS.Timeout | null>(null);
+  const [touchTimer, setTouchTimer] = useState<NodeJS.Timeout | null>(null);
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const moreInfoRef = React.useRef<HTMLDivElement>(null);
 
@@ -120,8 +121,9 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     return () => {
       if (hoverTimer) clearTimeout(hoverTimer);
       if (videoTimer) clearTimeout(videoTimer);
+      if (touchTimer) clearTimeout(touchTimer);
     };
-  }, [hoverTimer, videoTimer]);
+  }, [hoverTimer, videoTimer, touchTimer]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -155,11 +157,83 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     }
   };
 
-  const handlePlayClick = () => {
+  const handleTouchStart = () => {
+    setIsHovered(true);
+    setIsAutoPlaying(false);
+    
+    // Start video immediately on touch
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = 0;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.log('Video play failed:', err);
+        });
+      }
+    }
+    
+    // Auto-pause after 5 seconds on touch devices
+    if (touchTimer) {
+      clearTimeout(touchTimer);
+    }
+    const timer = setTimeout(() => {
+      setIsHovered(false);
+      setIsAutoPlaying(true);
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
+    }, 5000);
+    setTouchTimer(timer);
+  };
+
+  const handleTouchEnd = () => {
+    // Ensure video plays on touch end if it didn't on touch start
+    const video = videoRef.current;
+    if (video && video.paused && isHovered) {
+      video.play().catch(() => {});
+    }
+  };
+
+  const handleCarouselClick = () => {
+    // Call onGameClick to open login modal or navigate
+    onGameClick();
+    
+    // On mobile, ensure video plays on click as well
+    if (!isHovered) {
+      setIsHovered(true);
+      setIsAutoPlaying(false);
+      
+      const video = videoRef.current;
+      if (video) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+      
+      // Auto-pause after 5 seconds on mobile
+      if (touchTimer) {
+        clearTimeout(touchTimer);
+      }
+      const timer = setTimeout(() => {
+        setIsHovered(false);
+        setIsAutoPlaying(true);
+        if (videoRef.current) {
+          videoRef.current.pause();
+          videoRef.current.currentTime = 0;
+        }
+      }, 5000);
+      setTouchTimer(timer);
+    }
+  };
+
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering carousel click
     onGameClick();
   };
 
-  const handleMoreInfoClick = () => {
+  const handleMoreInfoClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering carousel click
     setShowMoreInfo(!showMoreInfo);
   };
 
@@ -170,6 +244,9 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
       className="interactive-carousel"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onClick={handleCarouselClick}
     >
       <div className="carousel-container">
         <div className="slide-content">
@@ -180,14 +257,14 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
               <div className="slide-actions">
                 <button 
                   className="slide-button primary"
-                  onClick={handlePlayClick}
+                  onClick={(e) => handlePlayClick(e)}
                 >
                   <span className="btn-icon">▶</span>
                   {t('homepage.action.play')}
                 </button>
                 <button 
                   className="slide-button secondary hide-on-mobile"
-                  onClick={handleMoreInfoClick}
+                  onClick={(e) => handleMoreInfoClick(e)}
                 >
                   <span className="btn-icon">ℹ</span>
                   {t('homepage.action.moreInfo')}

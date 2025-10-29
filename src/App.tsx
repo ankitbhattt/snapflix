@@ -5,7 +5,6 @@ import PostLoginHeader from './components/PostLoginHeader';
 import HeroSection from './components/HeroSection';
 import InteractiveCarousel from './components/InteractiveCarousel';
 import VideoCategories from './components/GameCategories';
-import ExploreSection from './components/ExploreSection';
 import VideosSection from './components/VideosSection';
 import FavoritesSection from './components/FavoritesSection';
 import LoginModal from './components/LoginModal';
@@ -130,7 +129,6 @@ function AppContent() {
             <InteractiveCarousel onGameClick={handleVideoClick} />
             <FavoritesSection onVideoClick={handleVideoClick} onNavigate={handleNavigate} />
             <VideoCategories onVideoClick={handleVideoClick} onNavigate={handleNavigate} />
-            <ExploreSection />
             <VideosSection />
           </>
         );

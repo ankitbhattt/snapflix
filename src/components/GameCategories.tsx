@@ -25,6 +25,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   const [showVideo, setShowVideo] = useState(true);
   const [favorite, setFavorite] = useState(isFavorite || false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const touchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -34,10 +35,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
     }
   };
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-    
-    // Start video immediately on hover
+  const playVideo = () => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
       videoRef.current.play().catch((err) => {
@@ -46,21 +44,95 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
     }
   };
 
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    
+  const pauseVideo = () => {
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
     }
   };
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    playVideo();
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    pauseVideo();
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    // Don't prevent default to allow natural touch behavior
+    setIsHovered(true);
+    
+    // Clear any existing timer
+    if (touchTimerRef.current) {
+      clearTimeout(touchTimerRef.current);
+    }
+    
+    // Play video on touch
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = 0;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If autoplay is blocked, try again on touch end
+        });
+      }
+    }
+    
+    // Auto-pause after 5 seconds on touch devices
+    touchTimerRef.current = setTimeout(() => {
+      setIsHovered(false);
+      pauseVideo();
+    }, 5000);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    // Ensure video plays on touch end if it didn't on touch start
+    const video = videoRef.current;
+    if (video && video.paused && isHovered) {
+      video.play().catch(() => {});
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (touchTimerRef.current) {
+        clearTimeout(touchTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // On mobile, ensure video plays on click as well
+    if (!isHovered) {
+      setIsHovered(true);
+      playVideo();
+      
+      // Auto-pause after 5 seconds on mobile
+      if (touchTimerRef.current) {
+        clearTimeout(touchTimerRef.current);
+      }
+      touchTimerRef.current = setTimeout(() => {
+        setIsHovered(false);
+        pauseVideo();
+      }, 5000);
+    }
+    
+    // Call the original onClick handler
+    onVideoClick();
+  };
+
   return (
     <div 
       className={`video-card ${isHovered ? 'hovered' : ''}`}
-      onClick={onVideoClick}
+      onClick={handleCardClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div className="video-image-container">
         <video
@@ -71,6 +143,12 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
           playsInline
           loop={false}
           preload="metadata"
+          onLoadedMetadata={() => {
+            if (videoRef.current && !isHovered) {
+              videoRef.current.currentTime = 0.1;
+              videoRef.current.pause();
+            }
+          }}
         />
         <div className="video-overlay video-active">
           <div className="video-preview-badge">

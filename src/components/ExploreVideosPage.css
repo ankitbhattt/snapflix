@@ -282,37 +282,13 @@
 
 @media (max-width: 768px) {
   .explore-videos-page {
-    padding: 40px 15px;
+    padding: 30px 15px;
   }
 
-  .explore-main-title {
-    font-size: 2.5rem;
+  .explore-header-section {
+    margin-bottom: 40px;
   }
 
-  .title-icon {
-    font-size: 2.5rem;
-  }
-
-  .explore-subtitle {
-    font-size: 1.1rem;
-  }
-
-  .categories-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .category-thumbnail {
-    height: 180px;
-  }
-
-  .preview-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-  }
-}
-
-@media (max-width: 480px) {
   .explore-main-title {
     font-size: 2rem;
     flex-direction: column;
@@ -323,12 +299,112 @@
     font-size: 2rem;
   }
 
+  .explore-subtitle {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .category-card {
+    border-radius: 16px;
+  }
+
+  .category-thumbnail {
+    height: 200px;
+  }
+
+  .category-info {
+    padding: 20px;
+  }
+
   .category-name {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+  }
+
+  .category-description {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+
+  .explore-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .preview-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .explore-videos-page {
+    padding: 20px 12px;
+  }
+
+  .explore-header-section {
+    margin-bottom: 30px;
+  }
+
+  .explore-main-title {
+    font-size: 1.75rem;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .title-icon {
+    font-size: 1.75rem;
+  }
+
+  .explore-subtitle {
+    font-size: 0.9rem;
+    padding: 0 5px;
+  }
+
+  .category-thumbnail {
+    height: 180px;
+  }
+
+  .category-info {
+    padding: 15px;
+  }
+
+  .category-name {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .category-description {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+
+  .explore-btn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
   }
 
   .preview-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .preview-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+  
+  .preview-thumbnail {
+    aspect-ratio: 16/10;
   }
 }
 
