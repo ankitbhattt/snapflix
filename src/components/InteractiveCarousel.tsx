@@ -41,35 +41,35 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
       title: "GTA 6 Trailer",
       video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4",
       description: "The most anticipated game trailer",
-      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg"
+      image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&auto=format&fit=crop"
     },
     {
       id: 2,
       title: "OnePiece Edit",
       video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4",
       description: "Epic OnePiece moments compilation",
-      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg"
+      image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop"
     },
     {
       id: 3,
       title: "Cyberpunk Edit",
       video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4",
       description: "Futuristic cyberpunk action",
-      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566575/samples/people/kitchen-bar.jpg"
+      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&auto=format&fit=crop"
     },
     {
       id: 4,
       title: "OnePiece Quotes",
       video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4",
       description: "Inspirational quotes from OnePiece",
-      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg"
+      image: "https://images.unsplash.com/photo-1532146629-5b8e43dd8f1b?w=800&auto=format&fit=crop"
     },
     {
       id: 5,
       title: "Death Note Edit",
       video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/148_-_Death_note_edit_rf3xpx.mp4",
       description: "Mind games and psychological thriller",
-      image: "https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg"
+      image: "https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&auto=format&fit=crop"
     }
   ];
 

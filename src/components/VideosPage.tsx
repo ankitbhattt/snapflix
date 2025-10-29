@@ -19,6 +19,7 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [hoveredVideo, setHoveredVideo] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [playingVideos, setPlayingVideos] = useState<Set<number>>(new Set());
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
   const touchTimersRef = useRef<{ [key: number]: ReturnType<typeof setTimeout> | null }>({});
 
@@ -33,20 +34,20 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
   }, []);
 
   const allVideos: VideoItem[] = [
-    { id: 1, title: 'GTA 6 Trailer', category: 'trailers', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg', views: '12.5M', timeAgo: '1 week ago' },
-    { id: 2, title: 'OnePiece Edit', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg', views: '8.9M', timeAgo: '3 days ago' },
-    { id: 3, title: 'Cyberpunk Edit', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566575/samples/people/kitchen-bar.jpg', views: '6.3M', timeAgo: '2 days ago' },
-    { id: 4, title: 'OnePiece Quotes', category: 'adventure', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg', views: '5.1M', timeAgo: '1 week ago' },
-    { id: 5, title: 'Death Note Edit', category: 'thriller', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/148_-_Death_note_edit_rf3xpx.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg', views: '4.2M', timeAgo: '5 days ago' },
-    { id: 6, title: 'Demon Slayer Fight', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/122_-_Demon_slayer_fight_scene_fopfyr.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566575/samples/people/kitchen-bar.jpg', views: '7.8M', timeAgo: '4 days ago' },
-    { id: 7, title: 'Jojo Pucci Edit', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/126_-_Jojo_Pucci_Edit_x8przs.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg', views: '3.5M', timeAgo: '1 week ago' },
-    { id: 8, title: 'Tunnel to Summer', category: 'adventure', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/123._-_The_tunnel_to_summer_tjmhev.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg', views: '2.9M', timeAgo: '6 days ago' },
-    { id: 9, title: 'Naruto X Hinata', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/161_-_Naruto_X_hinata_pu2g4g.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg', views: '9.2M', timeAgo: '3 days ago' },
-    { id: 10, title: 'Sung Jin Woo', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/169_-_Sung_jin_woo_badass_krrzu7.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566575/samples/people/kitchen-bar.jpg', views: '6.7M', timeAgo: '2 days ago' },
-    { id: 11, title: 'Gear 5 Awakening', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/199_-_Gear_5_Awaken_moment_k1mczv.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg', views: '11.3M', timeAgo: '1 day ago' },
-    { id: 12, title: 'OnePiece Funny', category: 'adventure', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/165_-_Onepiece_funny_momment_qxqmwf.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg', views: '4.6M', timeAgo: '1 week ago' },
-    { id: 13, title: 'Naruto vs Sasuke', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/191_-_Naruto_X_Sasuke_mxmmkw.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg', views: '8.4M', timeAgo: '5 days ago' },
-    { id: 14, title: 'Usopp Moment', category: 'adventure', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/188_-_The_usopp_moment_vqarsl.mp4', image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg', views: '3.8M', timeAgo: '3 days ago' }
+    { id: 1, title: 'GTA 6 Trailer', category: 'trailers', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4', image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&auto=format&fit=crop', views: '12.5M', timeAgo: '1 week ago' },
+    { id: 2, title: 'OnePiece Edit', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4', image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop', views: '8.9M', timeAgo: '3 days ago' },
+    { id: 3, title: 'Cyberpunk Edit', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&auto=format&fit=crop', views: '6.3M', timeAgo: '2 days ago' },
+    { id: 4, title: 'OnePiece Quotes', category: 'adventure', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4', image: 'https://images.unsplash.com/photo-1532146629-5b8e43dd8f1b?w=800&auto=format&fit=crop', views: '5.1M', timeAgo: '1 week ago' },
+    { id: 5, title: 'Death Note Edit', category: 'thriller', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/148_-_Death_note_edit_rf3xpx.mp4', image: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&auto=format&fit=crop', views: '4.2M', timeAgo: '5 days ago' },
+    { id: 6, title: 'Demon Slayer Fight', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/122_-_Demon_slayer_fight_scene_fopfyr.mp4', image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&auto=format&fit=crop', views: '7.8M', timeAgo: '4 days ago' },
+    { id: 7, title: 'Jojo Pucci Edit', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/126_-_Jojo_Pucci_Edit_x8przs.mp4', image: 'https://images.unsplash.com/photo-1611834905996-b30d97dcf651?w=800&auto=format&fit=crop', views: '3.5M', timeAgo: '1 week ago' },
+    { id: 8, title: 'Tunnel to Summer', category: 'adventure', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/123._-_The_tunnel_to_summer_tjmhev.mp4', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop', views: '2.9M', timeAgo: '6 days ago' },
+    { id: 9, title: 'Naruto X Hinata', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/161_-_Naruto_X_hinata_pu2g4g.mp4', image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop', views: '9.2M', timeAgo: '3 days ago' },
+    { id: 10, title: 'Sung Jin Woo', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/169_-_Sung_jin_woo_badass_krrzu7.mp4', image: 'https://images.unsplash.com/photo-1562504208-03d85bc8c379?w=800&auto=format&fit=crop', views: '6.7M', timeAgo: '2 days ago' },
+    { id: 11, title: 'Gear 5 Awakening', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/199_-_Gear_5_Awaken_moment_k1mczv.mp4', image: 'https://images.unsplash.com/photo-1589208570631-aaac06b1c04c?w=800&auto=format&fit=crop', views: '11.3M', timeAgo: '1 day ago' },
+    { id: 12, title: 'OnePiece Funny', category: 'adventure', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/165_-_Onepiece_funny_momment_qxqmwf.mp4', image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop', views: '4.6M', timeAgo: '1 week ago' },
+    { id: 13, title: 'Naruto vs Sasuke', category: 'action', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/191_-_Naruto_X_Sasuke_mxmmkw.mp4', image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&auto=format&fit=crop', views: '8.4M', timeAgo: '5 days ago' },
+    { id: 14, title: 'Usopp Moment', category: 'adventure', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/188_-_The_usopp_moment_vqarsl.mp4', image: 'https://images.unsplash.com/photo-1532009324734-20a7a5813719?w=800&auto=format&fit=crop', views: '3.8M', timeAgo: '3 days ago' }
   ];
 
   const categories = [
@@ -62,6 +63,11 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
     : allVideos.filter(video => video.category === selectedCategory);
 
   const playVideo = (videoId: number) => {
+    setPlayingVideos(prev => {
+      const newSet = new Set(prev);
+      newSet.add(videoId);
+      return newSet;
+    });
     const video = videoRefs.current[videoId];
     if (video) {
       // Lazy load: set src only when hovered/touched
@@ -81,6 +87,11 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
   };
 
   const pauseVideo = (videoId: number) => {
+    setPlayingVideos(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(videoId);
+      return newSet;
+    });
     const video = videoRefs.current[videoId];
     if (video) {
       video.pause();
@@ -224,17 +235,25 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
               onTouchEnd={(e) => handleTouchEnd(e, video.id)}
             >
               <div className="video-wrapper">
-                <video
-                  ref={setVideoRef(video.id)}
-                  data-src={video.video}
-                  muted
-                  playsInline
-                  loop
-                  preload="none"
-                  poster={video.image}
-                  onLoadedMetadata={() => handleVideoLoaded(video.id)}
-                  className={`video-preview ${hoveredVideo === video.id ? 'playing' : ''}`}
-                />
+                {!playingVideos.has(video.id) && (
+                  <img
+                    src={video.image}
+                    alt={video.title}
+                    className="video-thumbnail"
+                  />
+                )}
+                {playingVideos.has(video.id) && (
+                  <video
+                    ref={setVideoRef(video.id)}
+                    data-src={video.video}
+                    muted
+                    playsInline
+                    loop
+                    preload="none"
+                    onLoadedMetadata={() => handleVideoLoaded(video.id)}
+                    className={`video-preview ${hoveredVideo === video.id ? 'playing' : ''}`}
+                  />
+                )}
                 <div className="video-badge">{video.category.toUpperCase()}</div>
               </div>
               <div className="video-details">

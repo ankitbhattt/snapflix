@@ -32,7 +32,7 @@ const ExploreVideosPage: React.FC = () => {
       description: 'Intense combat and thrilling action',
       count: 245,
       video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4',
-      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg'
+      image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&auto=format&fit=crop'
     },
     {
       id: 'adventure',
@@ -41,7 +41,7 @@ const ExploreVideosPage: React.FC = () => {
       description: 'Epic journeys and discoveries',
       count: 189,
       video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4',
-      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg'
+      image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop'
     },
     {
       id: 'strategy',
@@ -50,7 +50,7 @@ const ExploreVideosPage: React.FC = () => {
       description: 'Tactical gameplay and planning',
       count: 156,
       video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4',
-      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg'
+      image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&auto=format&fit=crop'
     },
     {
       id: 'racing',
@@ -59,7 +59,7 @@ const ExploreVideosPage: React.FC = () => {
       description: 'High-speed thrills',
       count: 98,
       video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4',
-      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg'
+      image: 'https://images.unsplash.com/photo-1503443207922-dff7d543fd0e?w=800&auto=format&fit=crop'
     },
     {
       id: 'sports',
@@ -68,7 +68,7 @@ const ExploreVideosPage: React.FC = () => {
       description: 'Virtual sports action',
       count: 124,
       video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/148_-_Death_note_edit_rf3xpx.mp4',
-      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566588/samples/balloons.jpg'
+      image: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&auto=format&fit=crop'
     },
     {
       id: 'puzzle',
@@ -77,7 +77,7 @@ const ExploreVideosPage: React.FC = () => {
       description: 'Brain-teasing challenges',
       count: 142,
       video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4',
-      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566577/samples/landscapes/girl-urban-view.jpg'
+      image: 'https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=800&auto=format&fit=crop'
     },
     {
       id: 'horror',
@@ -86,7 +86,7 @@ const ExploreVideosPage: React.FC = () => {
       description: 'Scary and suspenseful',
       count: 87,
       video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4',
-      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566597/cld-sample-4.jpg'
+      image: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&auto=format&fit=crop'
     },
     {
       id: 'indie',
@@ -95,7 +95,7 @@ const ExploreVideosPage: React.FC = () => {
       description: 'Creative and unique',
       count: 203,
       video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4',
-      image: 'https://res.cloudinary.com/dbudqhbum/image/upload/v1761566574/samples/ecommerce/analog-classic.jpg'
+      image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&auto=format&fit=crop'
     }
   ];
 
