@@ -48,6 +48,33 @@
   background: none !important;
 }
 
+/* Ensure logo text is visible */
+.modal-content .logo-text {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: flex !important;
+}
+
+.modal-content .text-snap {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: inline-block !important;
+  background: linear-gradient(135deg, #dc2626 0%, #f97316 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.modal-content .text-flix {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: inline-block !important;
+  background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
 /* Override any blue colors from SnapflixLogo */
 .modal-content .snapflix-logo .gradient-blue {
   background: none !important;
@@ -117,45 +144,63 @@
   padding-top: 0;
 }
 
-.modal-logo {
+/* Custom Modal Logo Styling */
+.modal-logo-custom {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 15px;
-  transform: scale(1.2);
   width: 100%;
-  position: relative;
-  left: 0;
-  right: 0;
+  gap: 8px;
+  transform: scale(1.2);
 }
 
-.modal-logo .snapflix-logo {
-  margin: 0 auto;
+.modal-play-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.modal-play-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 12px rgba(220, 38, 38, 0.4));
+}
+
+.modal-logo-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  font-family: 'Arial Black', Arial, sans-serif;
+}
+
+.modal-text-snap,
+.modal-text-flix {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 2px;
   display: inline-block;
-  text-align: center;
-  width: auto;
-  max-width: 100%;
+  color: #f97316 !important;
 }
 
-.modal-logo .logo-container {
-  justify-content: center !important;
-  margin: 0 auto !important;
-  width: auto !important;
-  max-width: 100%;
+.modal-text-snap {
+  margin-right: 2px;
+  color: #f97316 !important;
+}
+
+.modal-text-flix {
+  color: #fbbf24 !important;
+}
+
+.modal-logo-text {
   display: flex !important;
 }
 
-.modal-logo * {
-  background: none !important;
-}
-
-.modal-logo .gradient-blue,
-.modal-logo .gradient-red-orange,
-.modal-logo .play-button-icon,
-.modal-logo .play-triangle,
-.modal-logo .s-curve {
-  background: none !important;
-}
+/* Remove old logo styles */
 
 .modal-title {
   color: white;
@@ -489,21 +534,21 @@
     font-size: 15px;
   }
   
-  .modal-logo {
-    transform: scale(2.0);
+  .modal-logo-custom {
     margin-bottom: 20px;
-    left: 0 !important;
-    right: 0 !important;
+    gap: 6px;
+    transform: scale(1.0);
   }
-  
-  .modal-logo .snapflix-logo {
-    width: auto !important;
-    max-width: calc(100% - 60px);
+
+  .modal-play-icon {
+    width: 32px !important;
+    height: 32px !important;
   }
-  
-  .modal-logo .logo-container {
-    width: auto !important;
-    max-width: 100%;
+
+  .modal-text-snap,
+  .modal-text-flix {
+    font-size: 16px !important;
+    letter-spacing: 1px !important;
   }
   
   .modal-content {

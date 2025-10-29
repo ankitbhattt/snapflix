@@ -105,45 +105,61 @@
   width: 100%;
 }
 
-.snapflix-logo-container {
+/* Custom OTP Modal Logo Styling */
+.snapflix-logo-container-custom {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px auto;
-  transform: scale(1.2);
+  margin-bottom: 20px;
   width: 100%;
-  text-align: center;
-  position: relative;
-  left: 0;
-  right: 0;
+  gap: 8px;
+  transform: scale(1.2);
 }
 
-.snapflix-logo-container .snapflix-logo {
-  margin: 0 auto;
+/* Shared modal logo styles */
+.modal-play-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.modal-play-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 12px rgba(220, 38, 38, 0.4));
+}
+
+.modal-logo-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  font-family: 'Arial Black', Arial, sans-serif;
+}
+
+.modal-text-snap,
+.modal-text-flix {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 2px;
   display: inline-block;
-  text-align: center;
-  width: auto;
-  max-width: 100%;
+  color: #f97316 !important;
 }
 
-.snapflix-logo-container .logo-container {
-  justify-content: center !important;
-  margin: 0 auto !important;
-  width: auto !important;
-  max-width: 100%;
+.modal-text-snap {
+  margin-right: 2px;
+  color: #f97316 !important;
+}
+
+.modal-text-flix {
+  color: #fbbf24 !important;
+}
+
+.modal-logo-text {
   display: flex !important;
-}
-
-.snapflix-logo-container * {
-  background: none !important;
-}
-
-.snapflix-logo-container .gradient-blue,
-.snapflix-logo-container .gradient-red-orange,
-.snapflix-logo-container .play-button-icon,
-.snapflix-logo-container .play-triangle,
-.snapflix-logo-container .s-curve {
-  background: none !important;
 }
 
 .gamepad-character {
@@ -474,21 +490,21 @@
     max-width: 100%;
   }
   
-  .snapflix-logo-container {
-    transform: scale(2.2);
+  .snapflix-logo-container-custom {
     margin-bottom: 25px;
-    left: 0 !important;
-    right: 0 !important;
+    gap: 6px;
+    transform: scale(1.0);
   }
-  
-  .snapflix-logo-container .snapflix-logo {
-    width: auto !important;
-    max-width: calc(100% - 70px);
+
+  .modal-play-icon {
+    width: 32px !important;
+    height: 32px !important;
   }
-  
-  .snapflix-logo-container .logo-container {
-    width: auto !important;
-    max-width: 100%;
+
+  .modal-text-snap,
+  .modal-text-flix {
+    font-size: 16px !important;
+    letter-spacing: 1px !important;
   }
   
   .modal-content {

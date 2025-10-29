@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import './LoginModal.css';
-import './ModalLogo.css';
-import SnapflixLogo from './SnapflixLogo';
 import { useTranslation } from '../contexts/TranslationContext';
 
 interface LoginModalProps {
@@ -77,8 +75,25 @@ const LoginModal: React.FC<LoginModalProps> = ({ onSubmit, onClose }) => {
         </button>
 
         <div className="modal-header">
-          <div className="modal-logo">
-            <SnapflixLogo size="medium" animated={false} />
+          <div className="modal-logo-custom">
+            <div className="modal-play-icon">
+              <svg viewBox="0 0 100 100" className="modal-play-svg">
+                <defs>
+                  <linearGradient id="modalSnapflixGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#dc2626" />
+                    <stop offset="50%" stopColor="#f97316" />
+                    <stop offset="100%" stopColor="#fbbf24" />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" fill="url(#modalSnapflixGradient)" className="modal-play-circle" />
+                <path d="M 40 30 L 40 70 L 65 50 Z" fill="white" className="modal-play-triangle" />
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" className="modal-play-ring" />
+              </svg>
+            </div>
+            <div className="modal-logo-text">
+              <span className="modal-text-snap" style={{ color: '#f97316', backgroundColor: 'transparent' }}>SNAP</span>
+              <span className="modal-text-flix" style={{ color: '#fbbf24', backgroundColor: 'transparent' }}>FLIX</span>
+            </div>
           </div>
           <h1 className="modal-title">{t('login.welcome')}</h1>
         </div>
