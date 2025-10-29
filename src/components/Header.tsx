@@ -81,6 +81,20 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
           <SnapflixLogo size="medium" animated={true} />
         </div>
         
+        {/* Mobile Header Center Elements */}
+        <div className="mobile-header-center">
+          <button 
+            className="mobile-search-btn"
+            onClick={() => setShowSearch(true)}
+            aria-label="Search"
+          >
+            <span className="search-icon">🔍</span>
+          </button>
+          <div className="mobile-header-indicator">
+            <span className="indicator-dot"></span>
+          </div>
+        </div>
+        
         {/* Mobile Menu Toggle */}
         <button 
           className={`mobile-menu-toggle ${showMobileMenu ? 'active' : ''}`}

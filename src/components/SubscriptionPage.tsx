@@ -48,7 +48,7 @@ const SubscriptionPage: React.FC = () => {
     },
     {
       id: 'monthly',
-      name: 'Monthly Premium',
+      name: 'Monthly Pass',
       duration: '30 Days',
       price: 3,
       originalPrice: 5,
