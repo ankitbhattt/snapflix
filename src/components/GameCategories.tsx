@@ -227,7 +227,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavig
   };
   const categories = [
     {
-      title: "TOP TRENDING VIDEO GAMES",
+      title: "TOP TRENDING VIDEOS",
       games: [
         { name: "Demon Slayer Fight", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/122_-_Demon_slayer_fight_scene_fopfyr.mp4", image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&auto=format&fit=crop" },
         { name: "Jojo Pucci Edit", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/126_-_Jojo_Pucci_Edit_x8przs.mp4", image: "https://images.unsplash.com/photo-1611834905996-b30d97dcf651?w=800&auto=format&fit=crop" },
@@ -236,7 +236,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavig
       ]
     },
     {
-      title: "ADVENTURE VIDEO GAMES",
+      title: "ADVENTURE VIDEOS",
       games: [
         { name: "Cyberpunk Edit", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4", image: "https://images.unsplash.com/photo-1551808525-51a94da548ce?w=800&auto=format&fit=crop" },
         { name: "OnePiece Quotes", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4", image: "https://images.unsplash.com/photo-1526318896980-cf78c088247c?w=800&auto=format&fit=crop" },
@@ -245,7 +245,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavig
       ]
     },
     {
-      title: "ACTION VIDEO GAMES",
+      title: "ACTION VIDEOS",
       games: [
         { name: "GTA 6 Trailer", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4", image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&auto=format&fit=crop" },
         { name: "Naruto X Hinata", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/161_-_Naruto_X_hinata_pu2g4g.mp4", image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop" },
@@ -254,7 +254,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavig
       ]
     },
     {
-      title: "BRAIN TEASE VIDEO GAMES",
+      title: "BRAIN TEASE VIDEOS",
       games: [
         { name: "Gear 5 Awakening", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/199_-_Gear_5_Awaken_moment_k1mczv.mp4", image: "https://images.unsplash.com/photo-1498889444388-e67ea62c464b?w=800&auto=format&fit=crop" },
         { name: "Dance Video", video: "https://res.cloudinary.com/dbudqhbum/video/upload/samples/dance-2.mp4", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop" },
@@ -263,7 +263,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavig
       ]
     },
     {
-      title: "FIGHTING VIDEO GAMES",
+      title: "FIGHTING VIDEOS",
       games: [
         { name: "Demon Slayer Fight", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/122_-_Demon_slayer_fight_scene_fopfyr.mp4", image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&auto=format&fit=crop" },
         { name: "Jojo Pucci Edit", video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/126_-_Jojo_Pucci_Edit_x8przs.mp4", image: "https://images.unsplash.com/photo-1611834905996-b30d97dcf651?w=800&auto=format&fit=crop" },

@@ -221,7 +221,7 @@ const SubscriptionPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Payment Section */}
+        {/* Payment Section - Coming Soon */}
         {selectedPlanData && (
           <div className="payment-section">
             <div className="selected-plan-summary">
@@ -232,51 +232,25 @@ const SubscriptionPage: React.FC = () => {
               </div>
             </div>
 
-            {!showPaymentMethods ? (
-              <button className="proceed-payment-btn" onClick={handlePayment}>
-                Proceed to Payment
-              </button>
-            ) : (
-              <div className="payment-methods-section">
-                <h3>Choose Payment Method</h3>
-                <div className="payment-methods-grid">
-                  {paymentMethods.map((method) => (
-                    <div 
-                      key={method.id}
-                      className={`payment-method-card ${selectedPaymentMethod === method.id ? 'selected' : ''}`}
-                      onClick={() => handlePaymentMethodSelect(method.id)}
-                    >
-                      <div className="payment-icon">{method.icon}</div>
-                      <h4>{method.name}</h4>
-                      <p>{method.description}</p>
-                    </div>
-                  ))}
+            <div className="coming-soon-section">
+              <div className="coming-soon-icon">🚀</div>
+              <h3>Payment Integration Coming Soon</h3>
+              <p>We're working on integrating secure payment methods. Check back soon to complete your subscription!</p>
+              <div className="coming-soon-features">
+                <div className="feature-preview">
+                  <span className="feature-icon">💳</span>
+                  <span>Multiple Payment Options</span>
                 </div>
-
-                {selectedPaymentMethod && (
-                  <div className="final-payment-section">
-                    <div className="payment-summary">
-                      <div className="summary-item">
-                        <span>Plan:</span>
-                        <span>{selectedPlanData.name}</span>
-                      </div>
-                      <div className="summary-item">
-                        <span>Duration:</span>
-                        <span>{selectedPlanData.duration}</span>
-                      </div>
-                      <div className="summary-item total">
-                        <span>Total Amount:</span>
-                        <span>SZL{selectedPlanData.price}</span>
-                      </div>
-                    </div>
-                    
-                    <button className="final-pay-btn" onClick={handleFinalPayment}>
-                      Pay SZL{selectedPlanData.price}
-                    </button>
-                  </div>
-                )}
+                <div className="feature-preview">
+                  <span className="feature-icon">🔒</span>
+                  <span>Secure & Encrypted</span>
+                </div>
+                <div className="feature-preview">
+                  <span className="feature-icon">⚡</span>
+                  <span>Instant Activation</span>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         )}
 

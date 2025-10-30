@@ -165,9 +165,6 @@ const ExploreVideosPage: React.FC = () => {
               <div className={`category-overlay ${hoveredVideo === category.id ? 'video-active' : ''}`}>
                 <span className="category-icon">{category.icon}</span>
               </div>
-              <div className="video-count-badge">
-                {category.count} Videos
-              </div>
             </div>
             <div className="category-info">
               <h3 className="category-name">{category.name}</h3>
