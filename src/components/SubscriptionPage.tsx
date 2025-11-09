@@ -30,7 +30,7 @@ const SubscriptionPage: React.FC = () => {
   const plans: Plan[] = [
     {
       id: 'daily',
-      name: 'Daily Pass',
+      name: 'Daily Pack',
       duration: '1 Day',
       price: 1,
       popular: false,
@@ -38,10 +38,10 @@ const SubscriptionPage: React.FC = () => {
     },
     {
       id: 'weekly',
-      name: 'Weekly Pass',
+      name: 'Weekly Pack',
       duration: '7 Days',
       price: 5,
-      originalPrice: 7,
+      originalPrice: 15,
       discount: '29% OFF',
       popular: false,
       features: ['Unlimited Videos', 'HD Quality', 'Mobile & Desktop', 'Ad-Free Experience', 'Early Access']
@@ -50,8 +50,8 @@ const SubscriptionPage: React.FC = () => {
       id: 'monthly',
       name: 'Monthly Pass',
       duration: '30 Days',
-      price: 3,
-      originalPrice: 5,
+      price: 15,
+      originalPrice: 25,
       discount: '40% OFF',
       popular: true,
       features: ['Unlimited Videos', '4K Quality', 'All Devices', 'Ad-Free Experience', 'Early Access', 'Exclusive Content', 'Priority Support']

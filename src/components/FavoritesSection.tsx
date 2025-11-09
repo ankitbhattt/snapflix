@@ -15,14 +15,6 @@ interface FavoritesSectionProps {
 
 const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNavigate }) => {
   const [favoriteVideos, setFavoriteVideos] = useState<VideoItem[]>([]);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // Safely detect mobile once on mount
-    if (typeof window !== 'undefined' && window.innerWidth) {
-      setIsMobile(window.innerWidth <= 768);
-    }
-  }, []);
 
   useEffect(() => {
     const loadFavorites = () => {
@@ -105,6 +97,7 @@ const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNav
                     const img = e.currentTarget;
                     const videoEl = document.createElement('video');
                     videoEl.src = video.video;
+                    videoEl.poster = video.image;
                     videoEl.className = 'favorite-video-element';
                     videoEl.muted = true;
                     videoEl.playsInline = true;
@@ -127,6 +120,7 @@ const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNav
                     const img = e.currentTarget;
                     const videoEl = document.createElement('video');
                     videoEl.src = video.video;
+                    videoEl.poster = video.image;
                     videoEl.className = 'favorite-video-element';
                     videoEl.muted = true;
                     videoEl.playsInline = true;

@@ -13,23 +13,135 @@ interface VideosPageProps {
   onVideoClick?: () => void;
 }
 
-const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [hoveredVideo, setHoveredVideo] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const [playingVideos, setPlayingVideos] = useState<Set<number>>(new Set());
-  const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
-  const touchTimersRef = useRef<{ [key: number]: ReturnType<typeof setTimeout> | null }>({});
+interface VideoCardProps {
+  video: VideoItem;
+  onCardClick: () => void;
+}
+
+const VideoCard: React.FC<VideoCardProps> = ({ video, onCardClick }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const touchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Play video when showVideo becomes true
+  useEffect(() => {
+    if (showVideo && videoRef.current) {
+      const videoEl = videoRef.current;
+      if (!videoEl.src && videoEl.dataset.src) {
+        videoEl.src = videoEl.dataset.src;
+      }
+      videoEl.currentTime = 0;
+      videoEl.play().catch(() => {});
+    }
+  }, [showVideo]);
+
+  const playVideo = () => {
+    setShowVideo(true);
+  };
+
+  const pauseVideo = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+    setShowVideo(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    playVideo();
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    pauseVideo();
+  };
+
+  const handleTouchStart = () => {
+    setIsHovered(true);
+    playVideo();
+    
+    if (touchTimerRef.current) {
+      clearTimeout(touchTimerRef.current);
+    }
+    
+    touchTimerRef.current = setTimeout(() => {
+      setIsHovered(false);
+      pauseVideo();
+    }, 5000);
+  };
 
   useEffect(() => {
-    // Safely detect mobile once on mount
-    const checkMobile = () => {
-      if (typeof window !== 'undefined' && window.innerWidth) {
-        setIsMobile(window.innerWidth <= 768);
+    return () => {
+      if (touchTimerRef.current) {
+        clearTimeout(touchTimerRef.current);
       }
     };
-    checkMobile();
   }, []);
+
+  const handleCardClick = () => {
+    if (!isHovered) {
+      setIsHovered(true);
+      playVideo();
+      
+      if (touchTimerRef.current) {
+        clearTimeout(touchTimerRef.current);
+      }
+      touchTimerRef.current = setTimeout(() => {
+        setIsHovered(false);
+        pauseVideo();
+      }, 5000);
+    }
+    
+    onCardClick();
+  };
+
+  return (
+    <div 
+      className="video-card-new"
+      onClick={handleCardClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+    >
+      <div className="video-wrapper">
+        {!showVideo && (
+          <img
+            src={video.image}
+            alt={video.title}
+            className="video-thumbnail"
+          />
+        )}
+        {showVideo && (
+          <video
+            ref={videoRef}
+            data-src={video.video}
+            poster={video.image}
+            muted
+            playsInline
+            loop
+            preload="none"
+            onLoadedMetadata={() => {
+              if (videoRef.current && !isHovered) {
+                videoRef.current.currentTime = 0.01;
+                videoRef.current.pause();
+              }
+            }}
+            className={`video-preview ${isHovered ? 'playing' : ''}`}
+          />
+        )}
+        <div className="video-badge">{video.category.toUpperCase()}</div>
+      </div>
+      <div className="video-details">
+        <h3>{video.title}</h3>
+      </div>
+    </div>
+  );
+};
+
+const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   const allVideos: VideoItem[] = [
     { id: 1, title: 'GTA 6 Trailer', category: 'trailers', video: 'https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4', image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&auto=format&fit=crop' },
@@ -60,146 +172,6 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
     ? allVideos
     : allVideos.filter(video => video.category === selectedCategory);
 
-  const playVideo = (videoId: number) => {
-    setPlayingVideos(prev => {
-      const newSet = new Set(prev);
-      newSet.add(videoId);
-      return newSet;
-    });
-    const video = videoRefs.current[videoId];
-    if (video) {
-      // Lazy load: set src only when hovered/touched
-      if (!video.src && video.dataset.src) {
-        video.src = video.dataset.src;
-      }
-      if (video.readyState >= 2) {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      } else {
-        video.addEventListener('loadedmetadata', () => {
-          video.currentTime = 0;
-          video.play().catch(() => {});
-        }, { once: true });
-      }
-    }
-  };
-
-  const pauseVideo = (videoId: number) => {
-    setPlayingVideos(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(videoId);
-      return newSet;
-    });
-    const video = videoRefs.current[videoId];
-    if (video) {
-      video.pause();
-      video.currentTime = 0;
-    }
-  };
-
-  const handleVideoHover = (videoId: number) => {
-    setHoveredVideo(videoId);
-    playVideo(videoId);
-  };
-
-  const handleVideoLeave = (videoId: number) => {
-    setHoveredVideo(null);
-    pauseVideo(videoId);
-    
-    // Clear touch timer if exists
-    const timer = touchTimersRef.current[videoId];
-    if (timer !== null && timer !== undefined) {
-      clearTimeout(timer);
-      touchTimersRef.current[videoId] = null;
-    }
-  };
-
-  const handleTouchStart = (e: React.TouchEvent, videoId: number) => {
-    // Don't prevent default to allow natural touch behavior
-    setHoveredVideo(videoId);
-    
-    // Clear any existing timer for this video
-    const existingTimer = touchTimersRef.current[videoId];
-    if (existingTimer !== null && existingTimer !== undefined) {
-      clearTimeout(existingTimer);
-    }
-    
-    // Play video on touch - lazy load src
-    const video = videoRefs.current[videoId];
-    if (video) {
-      // Lazy load: set src only when touched
-      if (!video.src && video.dataset.src) {
-        video.src = video.dataset.src;
-      }
-      video.currentTime = 0;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // If autoplay is blocked, will try on touch end
-        });
-      }
-    }
-    
-    // Auto-pause after 5 seconds on touch devices
-    touchTimersRef.current[videoId] = setTimeout(() => {
-      setHoveredVideo(null);
-      pauseVideo(videoId);
-    }, 5000);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent, videoId: number) => {
-    // Ensure video plays on touch end if it didn't on touch start
-    const video = videoRefs.current[videoId];
-    if (video && video.paused && hoveredVideo === videoId) {
-      video.play().catch(() => {});
-    }
-  };
-
-  const handleVideoLoaded = (videoId: number) => {
-    const video = videoRefs.current[videoId];
-    if (video && hoveredVideo !== videoId) {
-      video.currentTime = 0.01;
-      video.pause();
-    }
-  };
-
-  const setVideoRef = (videoId: number) => (el: HTMLVideoElement | null) => {
-    videoRefs.current[videoId] = el;
-  };
-
-  const handleCardClick = (videoId: number) => {
-    // On mobile, ensure video plays on click as well
-    if (hoveredVideo !== videoId) {
-      setHoveredVideo(videoId);
-      playVideo(videoId);
-      
-      // Auto-pause after 5 seconds on mobile
-      const existingTimer = touchTimersRef.current[videoId];
-      if (existingTimer !== null && existingTimer !== undefined) {
-        clearTimeout(existingTimer);
-      }
-      touchTimersRef.current[videoId] = setTimeout(() => {
-        setHoveredVideo(null);
-        pauseVideo(videoId);
-      }, 5000);
-    }
-    
-    if (onVideoClick) {
-      onVideoClick();
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      // Cleanup all timers on unmount
-      Object.values(touchTimersRef.current).forEach(timer => {
-        if (timer !== null && timer !== undefined) {
-          clearTimeout(timer);
-        }
-      });
-    };
-  }, []);
-
   return (
     <div className="videos-page-new">
       <div className="videos-content">
@@ -223,41 +195,11 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
 
         <div className="videos-grid-new">
           {filteredVideos.map((video) => (
-            <div
+            <VideoCard 
               key={video.id}
-              className="video-card-new"
-              onClick={() => handleCardClick(video.id)}
-              onMouseEnter={() => handleVideoHover(video.id)}
-              onMouseLeave={() => handleVideoLeave(video.id)}
-              onTouchStart={(e) => handleTouchStart(e, video.id)}
-              onTouchEnd={(e) => handleTouchEnd(e, video.id)}
-            >
-              <div className="video-wrapper">
-                {!playingVideos.has(video.id) && (
-                  <img
-                    src={video.image}
-                    alt={video.title}
-                    className="video-thumbnail"
-                  />
-                )}
-                {playingVideos.has(video.id) && (
-                  <video
-                    ref={setVideoRef(video.id)}
-                    data-src={video.video}
-                    muted
-                    playsInline
-                    loop
-                    preload="none"
-                    onLoadedMetadata={() => handleVideoLoaded(video.id)}
-                    className={`video-preview ${hoveredVideo === video.id ? 'playing' : ''}`}
-                  />
-                )}
-                <div className="video-badge">{video.category.toUpperCase()}</div>
-              </div>
-              <div className="video-details">
-                <h3>{video.title}</h3>
-              </div>
-            </div>
+              video={video}
+              onCardClick={() => onVideoClick?.()}
+            />
           ))}
         </div>
       </div>

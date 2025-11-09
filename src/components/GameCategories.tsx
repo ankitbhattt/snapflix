@@ -24,16 +24,21 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   const [isHovered, setIsHovered] = useState(false);
   const [showVideo, setShowVideo] = useState(false); // Start with false - use image instead
   const [favorite, setFavorite] = useState(isFavorite || false);
-  const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const touchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Play video when showVideo becomes true
   useEffect(() => {
-    // Safely detect mobile once on mount
-    if (typeof window !== 'undefined' && window.innerWidth) {
-      setIsMobile(window.innerWidth <= 768);
+    if (showVideo && videoRef.current) {
+      const videoEl = videoRef.current;
+      // Lazy load: set src only when hovered/interacted
+      if (!videoEl.src && videoEl.dataset.src) {
+        videoEl.src = videoEl.dataset.src;
+      }
+      videoEl.currentTime = 0;
+      videoEl.play().catch(() => {});
     }
-  }, []);
+  }, [showVideo]);
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,16 +49,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   };
 
   const playVideo = () => {
-    setShowVideo(true); // Show video element instead of image
-    const videoEl = videoRef.current;
-    if (videoEl) {
-      // Lazy load: set src only when hovered/interacted
-      if (!videoEl.src && videoEl.dataset.src) {
-        videoEl.src = videoEl.dataset.src;
-      }
-      videoEl.currentTime = 0;
-      videoEl.play().catch(() => {});
-    }
+    setShowVideo(true); // Show video element instead of image - useEffect will handle play
   };
 
   const pauseVideo = () => {
@@ -77,26 +73,11 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   const handleTouchStart = (e: React.TouchEvent) => {
     // Don't prevent default to allow natural touch behavior
     setIsHovered(true);
+    playVideo(); // Will trigger useEffect to play
     
     // Clear any existing timer
     if (touchTimerRef.current) {
       clearTimeout(touchTimerRef.current);
-    }
-    
-    // Play video on touch - lazy load src
-    const video = videoRef.current;
-    if (video) {
-      // Lazy load: set src only when touched
-      if (!video.src && video.dataset.src) {
-        video.src = video.dataset.src;
-      }
-      video.currentTime = 0;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // If autoplay is blocked, try again on touch end
-        });
-      }
     }
     
     // Auto-pause after 5 seconds on touch devices
@@ -104,14 +85,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
       setIsHovered(false);
       pauseVideo();
     }, 5000);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    // Ensure video plays on touch end if it didn't on touch start
-    const video = videoRef.current;
-    if (video && video.paused && isHovered) {
-      video.play().catch(() => {});
-    }
   };
 
   useEffect(() => {
@@ -149,7 +122,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
     >
       <div className="video-image-container">
         {!showVideo && (
@@ -163,6 +135,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
           <video
             ref={videoRef}
             data-src={video.video}
+            poster={video.image}
             className="video-element visible"
             muted
             playsInline

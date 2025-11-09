@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import './ExploreVideosPage.css';
 
 interface VideoCategory {
@@ -14,15 +14,7 @@ interface VideoCategory {
 const ExploreVideosPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
-
-  useEffect(() => {
-    // Safely detect mobile once on mount
-    if (typeof window !== 'undefined' && window.innerWidth) {
-      setIsMobile(window.innerWidth <= 768);
-    }
-  }, []);
 
   const categories: VideoCategory[] = [
     {
@@ -189,6 +181,7 @@ const ExploreVideosPage: React.FC = () => {
                   playsInline
                   loop
                   preload="metadata"
+                  poster={category.image}
                   className="preview-thumbnail"
                 />
                 <div className="preview-info">

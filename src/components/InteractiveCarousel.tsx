@@ -24,6 +24,9 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const [isMobile, setIsMobile] = useState(false);
   const [hoverTimer, setHoverTimer] = useState<NodeJS.Timeout | null>(null);
   const [videoTimer, setVideoTimer] = useState<NodeJS.Timeout | null>(null);
+  const [touchTimer, setTouchTimer] = useState<NodeJS.Timeout | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+  const moreInfoRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Safely detect mobile once on mount
@@ -31,9 +34,6 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
       setIsMobile(window.innerWidth <= 768);
     }
   }, []);
-  const [touchTimer, setTouchTimer] = useState<NodeJS.Timeout | null>(null);
-  const videoRef = React.useRef<HTMLVideoElement>(null);
-  const moreInfoRef = React.useRef<HTMLDivElement>(null);
 
   const carouselItems: CarouselItem[] = [
     {
@@ -346,6 +346,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
                 key={`video-${currentIndex}`}
                 ref={videoRef}
                 data-src={currentItem.video}
+                poster={currentItem.image}
                 className="slide-video-element visible"
                 muted
                 playsInline

@@ -93,16 +93,27 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ onVideoClick }) => {
                 preload="none"
                 poster={video.image}
                 onMouseEnter={(e) => {
+                  const videoEl = e.currentTarget;
                   // Lazy load on hover
-                  if (!e.currentTarget.src && e.currentTarget.dataset.src) {
-                    e.currentTarget.src = e.currentTarget.dataset.src;
+                  if (!videoEl.src && videoEl.dataset.src) {
+                    videoEl.src = videoEl.dataset.src;
                   }
+                  videoEl.currentTime = 0;
+                  videoEl.play().catch(() => {});
+                }}
+                onMouseLeave={(e) => {
+                  const videoEl = e.currentTarget;
+                  videoEl.pause();
+                  videoEl.currentTime = 0;
                 }}
                 onTouchStart={(e) => {
+                  const videoEl = e.currentTarget;
                   // Lazy load on touch
-                  if (!e.currentTarget.src && e.currentTarget.dataset.src) {
-                    e.currentTarget.src = e.currentTarget.dataset.src;
+                  if (!videoEl.src && videoEl.dataset.src) {
+                    videoEl.src = videoEl.dataset.src;
                   }
+                  videoEl.currentTime = 0;
+                  videoEl.play().catch(() => {});
                 }}
               />
               <button 
