@@ -95,10 +95,34 @@
   overflow: hidden;
 }
 
-.favorite-video-container-page video {
+.favorite-video-container-page video,
+.favorite-video-element-page {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  z-index: 2;
+  background: #000;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.favorite-video-element-page.favorite-video-page-visible {
+  opacity: 1;
+  z-index: 5;
+}
+
+.favorite-video-container-page .favorite-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 4;
 }
 
 .remove-favorite-btn {

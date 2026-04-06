@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './SearchModal.css';
 import { useTranslation } from '../contexts/TranslationContext';
+import { allVideos } from '../utils/localVideos';
 
 interface SearchModalProps {
   onClose: () => void;
@@ -23,8 +24,16 @@ const SearchModal: React.FC<SearchModalProps> = ({ onClose }) => {
   const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sample data for search (in a real app, this would come from an API)
+  const catalogVideoResults: SearchResult[] = allVideos.map((v) => ({
+    id: `vid-${v.id}`,
+    title: v.name,
+    type: 'video',
+    description: v.description || v.name,
+    category: v.category,
+  }));
+
   const allContent: SearchResult[] = [
+    ...catalogVideoResults,
     // Games
     { id: '1', title: 'Cyber Warriors 2077', type: 'game', description: 'Futuristic action RPG', thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100&h=100&fit=crop', category: 'Action' },
     { id: '2', title: 'Space Odyssey', type: 'game', description: 'Explore the vast universe', thumbnail: 'https://images.unsplash.com/photo-1614732414444-096e5f1122d5?w=100&h=100&fit=crop', category: 'Adventure' },
@@ -34,13 +43,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ onClose }) => {
     { id: '6', title: 'Puzzle Master', type: 'game', description: 'Challenge your mind', thumbnail: 'https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=100&h=100&fit=crop', category: 'Puzzle' },
     { id: '7', title: 'Horror Mansion', type: 'game', description: 'Survive the night', thumbnail: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=100&h=100&fit=crop', category: 'Horror' },
     { id: '8', title: 'Sports Champions', type: 'game', description: 'Compete in various sports', thumbnail: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=100&h=100&fit=crop', category: 'Sports' },
-    
-    // Videos
-    { id: 'v1', title: 'Top Gaming Moments 2024', type: 'video', description: 'Best gaming highlights', category: 'Gameplay' },
-    { id: 'v2', title: 'Game Reviews: Latest Releases', type: 'video', description: 'Expert game reviews', category: 'Reviews' },
-    { id: 'v3', title: 'Pro Gaming Tips', type: 'video', description: 'Learn from the pros', category: 'Tutorials' },
-    { id: 'v4', title: 'Esports Championship', type: 'video', description: 'Watch the best compete', category: 'Esports' },
-    
+
     // Pages
     { id: 'p1', title: 'Subscription Plans', type: 'page', description: 'View our subscription options' },
     { id: 'p2', title: 'Rewards Program', type: 'page', description: 'Earn points and get rewards' },

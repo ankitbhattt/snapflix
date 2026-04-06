@@ -239,11 +239,16 @@
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transform: scale(0.9) translateZ(0);
+    transform: scale(1) translateZ(0);
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
     will-change: opacity, transform;
     z-index: 2;
+    background: #000;
+  }
+  
+  .video-image-placeholder {
+    transition: transform 0.3s ease;
   }
   
   @media (max-width: 768px) {
@@ -255,19 +260,15 @@
   .video-element.visible {
     opacity: 1;
     transform: scale(1);
-    z-index: 2;
+    z-index: 5;
   }
   
-  .video-card.hovered .video-element {
+  .video-card.hovered .video-element.visible {
     opacity: 1;
-    z-index: 3;
+    z-index: 5;
   }
   
   @media (max-width: 768px) {
-    .video-element {
-      opacity: 1;
-    }
-    
     .video-element.visible {
       opacity: 1;
     }
@@ -290,6 +291,7 @@
   opacity: 0;
   transition: opacity 0.3s ease, background 0.5s ease;
   z-index: 3;
+  pointer-events: none;
 }
 
 .video-overlay.video-active {

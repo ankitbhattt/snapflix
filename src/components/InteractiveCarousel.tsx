@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './InteractiveCarousel.css';
 import { useTranslation } from '../contexts/TranslationContext';
+import { useVideoThumbnail } from '../hooks/useVideoThumbnail';
+import { carouselVideos, getVideoUrl, getVideoMimeType } from '../utils/localVideos';
 
 interface CarouselItem {
   id: number;
   title: string;
-  video: string;
-  description: string;
-  image: string;
+  video: string; // Direct video URL
+  directUrl?: string;
+  description?: string;
 }
 
 interface InteractiveCarouselProps {
@@ -18,15 +20,15 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [showVideo, setShowVideo] = useState(false); // Start with false - use image instead
+  const [showVideo, setShowVideo] = useState(true); // Always show video
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [hoverTimer, setHoverTimer] = useState<NodeJS.Timeout | null>(null);
   const [videoTimer, setVideoTimer] = useState<NodeJS.Timeout | null>(null);
   const [touchTimer, setTouchTimer] = useState<NodeJS.Timeout | null>(null);
-  const videoRef = React.useRef<HTMLVideoElement>(null);
-  const moreInfoRef = React.useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const moreInfoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Safely detect mobile once on mount
@@ -35,83 +37,113 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     }
   }, []);
 
-  const carouselItems: CarouselItem[] = [
-    {
-      id: 1,
-      title: "GTA 6 Trailer",
-      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/157_-_GTA_6_Trailer_sdhb8f.mp4",
-      description: "The most anticipated game trailer",
-      image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&auto=format&fit=crop"
-    },
-    {
-      id: 2,
-      title: "OnePiece Edit",
-      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/127_-_Onepiece_edit_ifvaba.mp4",
-      description: "Epic OnePiece moments compilation",
-      image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Cyberpunk Edit",
-      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/134_-_Cyberpunk_Edit_kwejen.mp4",
-      description: "Futuristic cyberpunk action",
-      image: "https://images.unsplash.com/photo-1551808525-51a94da548ce?w=800&auto=format&fit=crop"
-    },
-    {
-      id: 4,
-      title: "OnePiece Quotes",
-      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/153_-_The_quotes_from_onepiece_aqq6qj.mp4",
-      description: "Inspirational quotes from OnePiece",
-      image: "https://images.unsplash.com/photo-1532146629-5b8e43dd8f1b?w=800&auto=format&fit=crop"
-    },
-    {
-      id: 5,
-      title: "Death Note Edit",
-      video: "https://res.cloudinary.com/dbudqhbum/video/upload/Anime%20complete%20reels/148_-_Death_note_edit_rf3xpx.mp4",
-      description: "Mind games and psychological thriller",
-      image: "https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&auto=format&fit=crop"
-    }
-  ];
+  // Convert carousel videos to the format needed
+  const carouselItems: CarouselItem[] = carouselVideos.map(v => ({
+    id: v.id,
+    title: v.name,
+    video: getVideoUrl(v.videoPath),
+    directUrl: getVideoUrl(v.videoPath),
+    description: v.description
+  }));
 
+  // ALL HOOKS MUST BE CALLED UNCONDITIONALLY - before any early returns
+  const currentItem = carouselItems.length > 0 ? carouselItems[currentIndex] : null;
+  const videoUrl = currentItem?.video || '';
+
+  // Skip thumbnail for external URLs (S3) – avoids CORS and speeds up; video will show instead
+  const isExternalUrl = videoUrl.startsWith('http://') || videoUrl.startsWith('https://');
+  const thumbnailSrc = useVideoThumbnail(isExternalUrl ? undefined : videoUrl);
 
   const nextSlide = useCallback(() => {
+    if (carouselItems.length === 0) return;
     setCurrentIndex((prevIndex) => 
       prevIndex === carouselItems.length - 1 ? 0 : prevIndex + 1
     );
   }, [carouselItems.length]);
 
   const prevSlide = useCallback(() => {
+    if (carouselItems.length === 0) return;
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? carouselItems.length - 1 : prevIndex - 1
     );
   }, [carouselItems.length]);
 
   const goToSlide = useCallback((index: number) => {
+    if (carouselItems.length === 0) return;
     setCurrentIndex(index);
-  }, []);
+  }, [carouselItems.length]);
+
+  // Auto-play video on load and when slide changes - optimized with cleanup
+  useEffect(() => {
+    if (!currentItem || !videoRef.current || !videoUrl) return;
+    
+    const video = videoRef.current;
+    let cleanup: (() => void) | null = null;
+    
+    // Reset video when slide changes
+    video.pause();
+    video.currentTime = 0;
+    
+    // Set src when index changes
+    if (video.src !== videoUrl) {
+      video.src = videoUrl;
+      video.load();
+    }
+    
+    // Play when ready - simplified
+    const playVideo = () => {
+      if (video.readyState >= 2 && video.paused && currentItem) {
+        video.currentTime = 0;
+        video.play().catch(() => {
+          // Autoplay blocked - ignore
+        });
+      }
+    };
+    
+    // Try to play immediately if ready
+    if (video.readyState >= 2) {
+      playVideo();
+    } else {
+      const onCanPlay = () => {
+        if (currentItem) {
+          playVideo();
+        }
+      };
+      video.addEventListener('canplay', onCanPlay, { once: true });
+      cleanup = () => {
+        video.removeEventListener('canplay', onCanPlay);
+      };
+    }
+    
+    return () => {
+      if (cleanup) cleanup();
+    };
+  }, [currentIndex, currentItem, videoUrl]);
 
   useEffect(() => {
     if (!isAutoPlaying) return;
+    if (carouselItems.length === 0) return;
     
     // Disable auto-advance on mobile to prevent performance issues
     if (isMobile) return;
 
     const interval = setInterval(nextSlide, 4000);
     return () => clearInterval(interval);
-  }, [nextSlide, isAutoPlaying, isMobile]);
+  }, [nextSlide, isAutoPlaying, isMobile, carouselItems.length]);
 
   // Start video when slide changes (only on hover)
   useEffect(() => {
     const video = videoRef.current;
-    if (video && isHovered) {
+    if (video && isHovered && showVideo && currentItem) {
       // Lazy load: set src if not loaded
       if (!video.src && video.dataset.src) {
         video.src = video.dataset.src;
+        video.load();
       }
       video.currentTime = 0;
       video.play().catch(() => {});
     }
-  }, [currentIndex, isHovered]);
+  }, [currentIndex, isHovered, showVideo, currentItem]);
 
   // Handle click outside More Info
   useEffect(() => {
@@ -142,15 +174,8 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const handleMouseEnter = () => {
     setIsHovered(true);
     setIsAutoPlaying(false);
-    setShowVideo(true); // Show video element instead of image
-    
-    // Start video immediately on hover - load src if not loaded
     const video = videoRef.current;
     if (video) {
-      // Lazy load: set src only when hovered/interacted
-      if (!video.src && video.dataset.src) {
-        video.src = video.dataset.src;
-      }
       video.currentTime = 0;
       video.play().catch(() => {});
     }
@@ -159,56 +184,30 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const handleMouseLeave = () => {
     setIsHovered(false);
     setIsAutoPlaying(true);
-    setShowVideo(false); // Hide video, show image again
-    
-    if (hoverTimer) {
-      clearTimeout(hoverTimer);
-      setHoverTimer(null);
-    }
-    if (videoTimer) {
-      clearTimeout(videoTimer);
-      setVideoTimer(null);
-    }
-    
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
     }
   };
 
   const handleTouchStart = () => {
     setIsHovered(true);
     setIsAutoPlaying(false);
-    setShowVideo(true); // Show video element instead of image
-    
-    // Start video immediately on touch - load src if not loaded
     const video = videoRef.current;
     if (video) {
-      // Lazy load: set src only when touched
-      if (!video.src && video.dataset.src) {
-        video.src = video.dataset.src;
-      }
       video.currentTime = 0;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {});
-      }
+      video.play().catch(() => {});
     }
     
-    // Auto-pause after 5 seconds on touch devices
     if (touchTimer) {
       clearTimeout(touchTimer);
     }
-      const timer = setTimeout(() => {
-        setIsHovered(false);
-        setIsAutoPlaying(true);
-        setShowVideo(false); // Hide video after touch timeout
-        if (videoRef.current) {
-          videoRef.current.pause();
-          videoRef.current.currentTime = 0;
-        }
-      }, 5000);
-      setTouchTimer(timer);
+    const timer = setTimeout(() => {
+      setIsHovered(false);
+      setIsAutoPlaying(true);
+    }, 5000);
+    setTouchTimer(timer);
   };
 
   const handleTouchEnd = () => {
@@ -222,7 +221,7 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
   const handleCarouselClick = () => {
     // On mobile, ensure video plays on click as well (don't open login modal on carousel click)
     // Login modal should only open when clicking the play button
-    if (!isHovered) {
+    if (!isHovered && currentItem) {
       setIsHovered(true);
       setIsAutoPlaying(false);
       
@@ -258,7 +257,14 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     setShowMoreInfo(!showMoreInfo);
   };
 
-  const currentItem = carouselItems[currentIndex];
+  // Early return AFTER all hooks are called
+  if (carouselItems.length === 0 || !currentItem) {
+    return (
+      <div className="interactive-carousel" style={{ minHeight: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div>No carousel videos available</div>
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -334,26 +340,43 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
           </div>
           
           <div className="slide-media">
-            {!showVideo && (
-              <img
-                src={currentItem.image}
-                alt={currentItem.title}
-                className="slide-image-element"
-              />
-            )}
-            {showVideo && (
-              <video
-                key={`video-${currentIndex}`}
-                ref={videoRef}
-                data-src={currentItem.video}
-                poster={currentItem.image}
-                className="slide-video-element visible"
-                muted
-                playsInline
-                loop={false}
-                preload="none"
-              />
-            )}
+            <video
+              key={`video-${currentIndex}-${videoUrl}`}
+              ref={videoRef}
+              src={videoUrl}
+              poster={thumbnailSrc || undefined}
+              className="slide-video-element visible"
+              muted
+              playsInline
+              loop
+              autoPlay
+              preload="auto"
+              onLoadedData={() => {
+                if (videoRef.current && process.env.NODE_ENV === 'development') {
+                  console.log('[Carousel] Video loaded:', currentItem?.title, videoUrl);
+                }
+              }}
+              onCanPlay={() => {
+                const video = videoRef.current;
+                if (video && video.paused) {
+                  video.currentTime = 0;
+                  video.play().catch(() => {
+                    // Autoplay blocked - ignore
+                  });
+                }
+              }}
+              onError={(e) => {
+                const video = videoRef.current;
+                const error = video?.error;
+                const msg = error
+                  ? `code ${error.code} (${error.message})`
+                  : 'unknown';
+                console.error('[Carousel] Video failed to load:', msg, 'URL:', videoUrl);
+              }}
+            >
+              <source src={videoUrl} type={getVideoMimeType(videoUrl)} />
+              Your browser does not support the video tag.
+            </video>
             <div className="media-overlay video-active">
               <div className="video-preview-badge">
                 <span className="preview-dot"></span>
