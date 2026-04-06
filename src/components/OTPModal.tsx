@@ -12,6 +12,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
   const [timeLeft, setTimeLeft] = useState(120); // 2 minutes
   const [isResendDisabled, setIsResendDisabled] = useState(true);
 
+
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -67,51 +68,94 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
         <button className="close-button" onClick={onClose}>×</button>
         
         <div className="otp-header">
-          <div className="gamepad-character">
-            <div className="gamepad-icon">🎮</div>
-            <div className="speech-bubble">Hi!</div>
+          <div className="snapflix-logo-container-custom">
+            <div className="modal-play-icon">
+              <svg viewBox="0 0 100 100" className="modal-play-svg">
+                <defs>
+                  <linearGradient id="otpSnapflixGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#dc2626" />
+                    <stop offset="50%" stopColor="#f97316" />
+                    <stop offset="100%" stopColor="#fbbf24" />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" fill="url(#otpSnapflixGradient)" className="modal-play-circle" />
+                <path d="M 40 30 L 40 70 L 65 50 Z" fill="white" className="modal-play-triangle" />
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" className="modal-play-ring" />
+              </svg>
+            </div>
+            <div className="modal-logo-text">
+              <span className="modal-text-snap" style={{ color: '#f97316', backgroundColor: 'transparent' }}>SNAP</span>
+              <span className="modal-text-flix" style={{ color: '#fbbf24', backgroundColor: 'transparent' }}>FLIX</span>
+            </div>
           </div>
-          <h2 className="otp-title">Enter Your OTP</h2>
+          <h2 className="otp-title">Verify Your Phone</h2>
           <p className="otp-description">
-            A text message was sent to {phoneNumber}
+            Enter the 4-digit code sent to {phoneNumber}
           </p>
         </div>
 
-        <div className="otp-inputs">
-          {otp.map((digit, index) => (
-            <input
-              key={index}
-              id={`otp-${index}`}
-              type="text"
-              value={digit}
-              onChange={(e) => handleOtpChange(index, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(index, e)}
-              className={`otp-input ${digit ? 'filled' : ''}`}
-              maxLength={1}
-              autoComplete="off"
-            />
-          ))}
+        <div className="otp-inputs-container">
+          <div className="otp-inputs">
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+                id={`otp-${index}`}
+                type="text"
+                value={digit}
+                onChange={(e) => handleOtpChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                className={`otp-input ${digit ? 'filled' : ''}`}
+                maxLength={1}
+                autoComplete="off"
+              />
+            ))}
+          </div>
+          <div className="otp-progress">
+            {/* <div className={`progress-bar ${otp.filter(d => d).length > 0 ? 'active' : ''}`} 
+                 style={{width: `${(otp.filter(d => d).length / 4) * 100}%`}}></div> */}
+          </div>
+        </div>
+
+        <div className="security-notice">
+          <div className="security-icon">🛡️</div>
+          <span>Your verification is secure and encrypted</span>
         </div>
 
         <div className="resend-section">
           {isResendDisabled ? (
-            <p className="resend-timer">
-              Resend Available in {formatTime(timeLeft)}
-            </p>
+            <div className="resend-timer-container">
+              <div className="timer-icon">⏱️</div>
+              <div className="timer-content">
+                <p className="resend-timer">
+                  Resend Available in {formatTime(timeLeft)}
+                </p>
+                <p className="timer-description">Didn't receive the code?</p>
+              </div>
+            </div>
           ) : (
             <button className="resend-button" onClick={handleResend}>
-              Resend OTP
+              <span>🔄</span>
+              <span>Resend OTP</span>
             </button>
           )}
         </div>
 
-        <button 
-          className="verify-button"
-          onClick={handleVerify}
-          disabled={!otp.every(digit => digit !== '')}
-        >
-          Verify OTP
-        </button>
+        <div className="verify-section">
+          <button 
+            className="verify-button"
+            onClick={handleVerify}
+            disabled={!otp.every(digit => digit !== '')}
+            style={{
+              background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
+              opacity: !otp.every(digit => digit !== '') ? 0.6 : 1
+            }}
+          >
+            <span>Verify & Continue</span>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+              <path d="M4 10L16 10M10 4L16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );

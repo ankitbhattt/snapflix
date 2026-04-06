@@ -5,24 +5,32 @@ import PostLoginHeader from './components/PostLoginHeader';
 import HeroSection from './components/HeroSection';
 import InteractiveCarousel from './components/InteractiveCarousel';
 import VideoCategories from './components/GameCategories';
-import ExploreSection from './components/ExploreSection';
 import VideosSection from './components/VideosSection';
+import FavoritesSection from './components/FavoritesSection';
 import LoginModal from './components/LoginModal';
 import OTPModal from './components/OTPModal';
 import RewardsPage from './components/RewardsPage';
 import ProfilePage from './components/ProfilePage';
 import SubscriptionPage from './components/SubscriptionPage';
 import NewsPage from './components/NewsPage';
+import UnsubscribePage from './components/UnsubscribePage';
+import SubscriptionManagementPage from './components/SubscriptionManagementPage';
+import VideosPage from './components/VideosPage';
+import FavoritesPage from './components/FavoritesPage';
+import ExploreVideosPage from './components/ExploreVideosPage';
+import FAQPage from './components/FAQPage';
+import AboutPage from './components/AboutPage';
 import Notification from './components/Notification';
 import ThemeToggle from './components/ThemeToggle';
 import ParticleBackground from './components/ParticleBackground';
 import SimpleParticleBackground from './components/SimpleParticleBackground';
 import FloatingActionButton from './components/FloatingActionButton';
 import Footer from './components/Footer';
+import { TranslationProvider } from './contexts/TranslationContext';
 
-type Page = 'home' | 'rewards' | 'profile' | 'subscription' | 'news';
+type Page = 'home' | 'rewards' | 'profile' | 'subscription' | 'news' | 'unsubscribe' | 'subscription-management' | 'videos' | 'favorites' | 'explore' | 'faq' | 'about';
 
-function App() {
+function AppContent() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -37,6 +45,8 @@ function App() {
   const handleVideoClick = useCallback(() => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
+    } else {
+      setCurrentPage('subscription');
     }
   }, [isLoggedIn]);
 
@@ -49,8 +59,9 @@ function App() {
   const handleOTPVerify = useCallback(() => {
     setShowOTPModal(false);
     setIsLoggedIn(true);
+    setCurrentPage('subscription');
     setNotification({
-      message: 'Login successful! Welcome to The Gameium!',
+      message: 'Welcome to Snapflix!',
       type: 'success'
     });
   }, []);
@@ -98,12 +109,26 @@ function App() {
         return <SubscriptionPage />;
       case 'news':
         return <NewsPage />;
+      case 'unsubscribe':
+        return <UnsubscribePage onNavigate={handleNavigate} onLogout={handleLogout} />;
+      case 'subscription-management':
+        return <SubscriptionManagementPage onNavigate={handleNavigate} />;
+      case 'videos':
+        return <VideosPage onVideoClick={handleVideoClick} />;
+      case 'favorites':
+        return <FavoritesPage onVideoClick={handleVideoClick} />;
+      case 'explore':
+        return <ExploreVideosPage />;
+      case 'faq':
+        return <FAQPage />;
+      case 'about':
+        return <AboutPage />;
       default:
         return (
           <>
             <InteractiveCarousel onGameClick={handleVideoClick} />
-            <VideoCategories onVideoClick={handleVideoClick} />
-            <ExploreSection />
+            <FavoritesSection onVideoClick={handleVideoClick} onNavigate={handleNavigate} />
+            <VideoCategories onVideoClick={handleVideoClick} onNavigate={handleNavigate} />
             <VideosSection />
           </>
         );
@@ -112,7 +137,8 @@ function App() {
 
   return (
     <div className="App" data-theme={currentTheme}>
-      <SimpleParticleBackground />
+      {/* Particle background disabled for performance - was causing crashes */}
+      {/* <SimpleParticleBackground /> */}
       
       {isLoggedIn ? (
         <PostLoginHeader 
@@ -158,6 +184,14 @@ function App() {
       <ThemeToggle onThemeChange={handleThemeChange} />
       <FloatingActionButton onQuickAction={handleQuickAction} />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <TranslationProvider>
+      <AppContent />
+    </TranslationProvider>
   );
 }
 

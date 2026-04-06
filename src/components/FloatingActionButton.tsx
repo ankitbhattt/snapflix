@@ -17,7 +17,6 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onQuickActi
   };
 
   const handleSubAction = (action: string) => {
-    console.log('Quick action:', action);
     setIsOpen(false);
   };
 

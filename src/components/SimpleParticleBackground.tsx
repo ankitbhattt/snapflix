@@ -40,12 +40,17 @@ const SimpleParticleBackground: React.FC = () => {
       }, 15000);
     };
 
+    // Reduce particle creation rate on mobile
+    const isMobile = window.innerWidth <= 768;
+    const intervalRate = isMobile ? 800 : 200;
+    const initialCount = isMobile ? 5 : 20;
+    
     // Create particles periodically
-    const interval = setInterval(createParticle, 200);
+    const interval = setInterval(createParticle, intervalRate);
     
     // Create initial particles
-    for (let i = 0; i < 20; i++) {
-      setTimeout(createParticle, i * 100);
+    for (let i = 0; i < initialCount; i++) {
+      setTimeout(createParticle, i * (isMobile ? 300 : 100));
     }
 
     return () => {

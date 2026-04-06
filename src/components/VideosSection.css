@@ -2,6 +2,18 @@
   background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
   padding: 80px 20px;
   position: relative;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .videos-container {
@@ -64,6 +76,42 @@
 
 .video-placeholder:hover .play-button {
   transform: scale(1.1);
+}
+
+.home-video-card {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-video-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.home-video-wrap {
+  aspect-ratio: 16 / 9;
+  background: #000;
+  position: relative;
+}
+
+.home-video-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.home-video-title {
+  margin: 0;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f3f4f6;
+  text-align: left;
+  line-height: 1.3;
 }
 
 .video-placeholder h3 {

@@ -39,7 +39,10 @@ const ParticleBackground: React.FC = () => {
     const createParticles = () => {
       const particles: Particle[] = [];
       const rect = canvas.getBoundingClientRect();
-      const particleCount = Math.min(Math.floor((rect.width * rect.height) / 15000), 50);
+      // Reduce particle count on mobile for better performance
+      const isMobile = window.innerWidth <= 768;
+      const maxParticles = isMobile ? 15 : 50;
+      const particleCount = Math.min(Math.floor((rect.width * rect.height) / 15000), maxParticles);
       
       for (let i = 0; i < particleCount; i++) {
         particles.push({
@@ -60,6 +63,7 @@ const ParticleBackground: React.FC = () => {
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
       
+      const isMobile = window.innerWidth <= 768;
       particlesRef.current.forEach((particle, index) => {
         // Update position
         particle.x += particle.vx;
@@ -78,21 +82,24 @@ const ParticleBackground: React.FC = () => {
         ctx.globalAlpha = particle.opacity;
         ctx.fill();
         
-        // Draw connections (only for nearby particles to improve performance)
-        for (let j = index + 1; j < particlesRef.current.length; j++) {
-          const otherParticle = particlesRef.current[j];
-          const dx = particle.x - otherParticle.x;
-          const dy = particle.y - otherParticle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance < 80) {
-            ctx.beginPath();
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = particle.color;
-            ctx.globalAlpha = (1 - distance / 80) * 0.05;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+        // Skip connections on mobile for better performance
+        if (!isMobile) {
+          // Draw connections (only for nearby particles to improve performance)
+          for (let j = index + 1; j < particlesRef.current.length; j++) {
+            const otherParticle = particlesRef.current[j];
+            const dx = particle.x - otherParticle.x;
+            const dy = particle.y - otherParticle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 80) {
+              ctx.beginPath();
+              ctx.moveTo(particle.x, particle.y);
+              ctx.lineTo(otherParticle.x, otherParticle.y);
+              ctx.strokeStyle = particle.color;
+              ctx.globalAlpha = (1 - distance / 80) * 0.05;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
           }
         }
       });
