@@ -3,6 +3,7 @@ import './InteractiveCarousel.css';
 import { useTranslation } from '../contexts/TranslationContext';
 import { useVideoThumbnail } from '../hooks/useVideoThumbnail';
 import { carouselVideos, getVideoUrl, getVideoMimeType } from '../utils/localVideos';
+import { VideoPlayHandler } from '../types/video';
 
 interface CarouselItem {
   id: number;
@@ -13,10 +14,10 @@ interface CarouselItem {
 }
 
 interface InteractiveCarouselProps {
-  onGameClick: () => void;
+  onVideoPlay: VideoPlayHandler;
 }
 
-const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }) => {
+const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onVideoPlay }) => {
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -218,38 +219,24 @@ const InteractiveCarousel: React.FC<InteractiveCarouselProps> = ({ onGameClick }
     }
   };
 
-  const handleCarouselClick = () => {
-    // On mobile, ensure video plays on click as well (don't open login modal on carousel click)
-    // Login modal should only open when clicking the play button
-    if (!isHovered && currentItem) {
-      setIsHovered(true);
-      setIsAutoPlaying(false);
-      
-      const video = videoRef.current;
-      if (video) {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
-      
-      // Auto-pause after 5 seconds on mobile
-      if (touchTimer) {
-        clearTimeout(touchTimer);
-      }
-      const timer = setTimeout(() => {
-        setIsHovered(false);
-        setIsAutoPlaying(true);
-        if (videoRef.current) {
-          videoRef.current.pause();
-          videoRef.current.currentTime = 0;
-        }
-      }, 5000);
-      setTouchTimer(timer);
+  const openCurrentVideo = () => {
+    if (!currentItem) {
+      return;
     }
+
+    onVideoPlay({
+      title: currentItem.title,
+      videoUrl: currentItem.video,
+    });
+  };
+
+  const handleCarouselClick = () => {
+    openCurrentVideo();
   };
 
   const handlePlayClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering carousel click
-    onGameClick();
+    e.stopPropagation();
+    openCurrentVideo();
   };
 
   const handleMoreInfoClick = (e: React.MouseEvent) => {

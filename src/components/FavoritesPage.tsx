@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import './FavoritesPage.css';
 import { allVideos, getVideoUrl } from '../utils/localVideos';
+import { VideoPlayHandler } from '../types/video';
 
 interface VideoItem {
   name: string;
@@ -10,11 +11,11 @@ interface VideoItem {
 
 interface FavoritePageCardProps {
   video: VideoItem;
-  onVideoClick?: () => void;
+  onVideoPlay?: VideoPlayHandler;
   onRemove: (name: string) => void;
 }
 
-const FavoritePageCard: React.FC<FavoritePageCardProps> = ({ video, onVideoClick, onRemove }) => {
+const FavoritePageCard: React.FC<FavoritePageCardProps> = ({ video, onVideoPlay, onRemove }) => {
   const [showVideo, setShowVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoUrl = video.video;
@@ -60,11 +61,18 @@ const FavoritePageCard: React.FC<FavoritePageCardProps> = ({ video, onVideoClick
     return undefined;
   }, [showVideo, videoUrl]);
 
+  const handleClick = () => {
+    onVideoPlay?.({
+      title: video.name,
+      videoUrl: video.video,
+    });
+  };
+
   return (
     <div 
       key={video.name} 
       className="favorite-card-page" 
-      onClick={onVideoClick}
+      onClick={handleClick}
       onMouseEnter={() => setShowVideo(true)}
       onMouseLeave={() => setShowVideo(false)}
     >
@@ -117,10 +125,10 @@ const FavoritePageCard: React.FC<FavoritePageCardProps> = ({ video, onVideoClick
 };
 
 interface FavoritesPageProps {
-  onVideoClick?: () => void;
+  onVideoPlay?: VideoPlayHandler;
 }
 
-const FavoritesPage: React.FC<FavoritesPageProps> = ({ onVideoClick }) => {
+const FavoritesPage: React.FC<FavoritesPageProps> = ({ onVideoPlay }) => {
   const [favoriteVideos, setFavoriteVideos] = useState<VideoItem[]>([]);
 
   useEffect(() => {
@@ -219,7 +227,7 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ onVideoClick }) => {
           <FavoritePageCard
             key={`${video.name}-${video.video}`}
             video={video}
-            onVideoClick={onVideoClick}
+            onVideoPlay={onVideoPlay}
             onRemove={handleRemoveFavorite}
           />
         ))}

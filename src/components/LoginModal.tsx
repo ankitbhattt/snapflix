@@ -1,74 +1,63 @@
 import React, { useState } from 'react';
 import './LoginModal.css';
 import { useTranslation } from '../contexts/TranslationContext';
+import { NOTIFICATION_MESSAGES, NotificationType } from '../constants/notifications';
+import {
+  buildMsisdn,
+  COUNTRY_CODE,
+  isValidLocalPhoneInput,
+  PHONE_INPUT_MAX_LENGTH,
+  sanitizeLocalPhoneInput,
+} from '../constants/phone';
+import { sendOtp } from '../services/authService';
+import { SendOtpResponse } from '../types/auth';
 
 interface LoginModalProps {
-  onSubmit: (phone: string) => void;
+  onSubmit: (msisdn: string, otpResponse: SendOtpResponse) => void;
+  onNotify: (message: string, type: NotificationType) => void;
   onClose: () => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ onSubmit, onClose }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ onSubmit, onNotify, onClose }) => {
   const { t } = useTranslation();
-  const [phone, setPhone] = useState('+27');
-  const [phoneError, setPhoneError] = useState('');
+  const [phone, setPhone] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-
-  // Mobile number validation function for South Africa
-  const validateMobileNumber = (phoneNumber: string): boolean => {
-    // Remove all non-digit characters except +
-    const cleanNumber = phoneNumber.replace(/[^\d+]/g, '');
-    
-    // Check if it starts with +27
-    if (!cleanNumber.startsWith('+27')) {
-      return false;
-    }
-    
-    // Check if it has exactly 9 digits after +27 (South African mobile numbers)
-    const digits = cleanNumber.substring(3);
-    return digits.length === 9 && /^\d{9}$/.test(digits);
-  };
-
-  // Format phone number as user types
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-    
-    // Remove all non-digit characters except +
-    value = value.replace(/[^\d+]/g, '');
-    
-    // Ensure it starts with +27
-    if (!value.startsWith('+27')) {
-      value = '+27';
-    }
-    
-    // Limit to +27 followed by max 9 digits
-    if (value.length > 12) {
-      value = value.substring(0, 12);
-    }
-    
-    setPhone(value);
-    
-    // Clear error when user starts typing
-    if (phoneError) {
-      setPhoneError('');
-    }
+    setPhone(sanitizeLocalPhoneInput(e.target.value));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate mobile number
-    if (!validateMobileNumber(phone)) {
-      setPhoneError('Please enter a valid 9-digit South African mobile number');
+
+    if (!isValidLocalPhoneInput(phone)) {
       return;
     }
-    
-    onSubmit(phone);
+
+    const msisdn = buildMsisdn(phone);
+    setIsLoading(true);
+
+    try {
+      const response = await sendOtp(msisdn);
+
+      if (response.ok) {
+        onSubmit(msisdn, response);
+      } else {
+        onNotify(NOTIFICATION_MESSAGES.ERROR_GENERIC, 'error');
+      }
+    } catch {
+      onNotify(NOTIFICATION_MESSAGES.ERROR_GENERIC, 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const isSubmitDisabled = !isValidLocalPhoneInput(phone) || isLoading;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>
+        <button className="close-button" onClick={onClose} type="button">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
           </svg>
@@ -87,7 +76,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onSubmit, onClose }) => {
                 </defs>
                 <circle cx="50" cy="50" r="45" fill="url(#modalSnapflixGradient)" className="modal-play-circle" />
                 <path d="M 40 30 L 40 70 L 65 50 Z" fill="white" className="modal-play-triangle" />
-                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" className="modal-play-ring" />
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255, 255, 0.3)" strokeWidth="2" className="modal-play-ring" />
               </svg>
             </div>
             <div className="modal-logo-text">
@@ -102,40 +91,43 @@ const LoginModal: React.FC<LoginModalProps> = ({ onSubmit, onClose }) => {
           <div className="input-group">
             <label className="input-label">{t('login.phone.label')}</label>
             <div className="phone-input-wrapper">
-              <span className="phone-prefix">+27</span>
+              <span className="phone-prefix">+{COUNTRY_CODE}</span>
               <input
                 type="tel"
-                value={phone.replace('+27', '')}
-                onChange={(e) => {
-                  let value = e.target.value.replace(/[^\d]/g, '');
-                  if (value.length > 9) {
-                    value = value.substring(0, 9);
-                  }
-                  setPhone('+27' + value);
-                }}
-                className={`phone-input ${phoneError ? 'error' : ''}`}
-                placeholder="012345678"
-                required
+                inputMode="numeric"
+                value={phone}
+                onChange={handlePhoneChange}
+                className="phone-input"
+                placeholder="76521776"
+                maxLength={PHONE_INPUT_MAX_LENGTH}
+                disabled={isLoading}
+                autoComplete="tel-national"
               />
             </div>
-            {phoneError && (
-              <div className="error-message">{phoneError}</div>
-            )}
           </div>
 
-          <button 
-            type="submit" 
-            className="send-otp-button"
-            disabled={!validateMobileNumber(phone)}
+          <button
+            type="submit"
+            className={`send-otp-button ${isLoading ? 'loading' : ''}`}
+            disabled={isSubmitDisabled}
             style={{
               background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
-              opacity: !validateMobileNumber(phone) ? 0.6 : 1
+              opacity: isSubmitDisabled ? 0.6 : 1,
             }}
           >
-            <span>{t('login.send.otp')}</span>
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-              <path d="M4 10L16 10M10 4L16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            {isLoading ? (
+              <>
+                <span className="button-spinner" aria-hidden="true" />
+                <span>Sending OTP...</span>
+              </>
+            ) : (
+              <>
+                <span>{t('login.send.otp')}</span>
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                  <path d="M4 10L16 10M10 4L16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </>
+            )}
           </button>
         </form>
 

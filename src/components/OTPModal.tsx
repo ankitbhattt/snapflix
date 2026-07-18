@@ -1,25 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import './OTPModal.css';
+import { NOTIFICATION_MESSAGES, NotificationType } from '../constants/notifications';
+import { verifyOtp } from '../services/authService';
+import { formatMsisdnForDisplay } from '../constants/phone';
+import { SendOtpResponse } from '../types/auth';
 
 interface OTPModalProps {
   phoneNumber: string;
+  otpSession?: SendOtpResponse | null;
   onVerify: () => void;
+  onBack: () => void;
+  onNotify: (message: string, type: NotificationType) => void;
   onClose: () => void;
 }
 
-const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) => {
+const OTPModal: React.FC<OTPModalProps> = ({
+  phoneNumber,
+  onVerify,
+  onBack,
+  onNotify,
+  onClose,
+}) => {
   const [otp, setOtp] = useState(['', '', '', '']);
-  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes
+  const [timeLeft, setTimeLeft] = useState(120);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
-
+  const [isVerifying, setIsVerifying] = useState(false);
 
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
-    } else {
-      setIsResendDisabled(false);
     }
+
+    setIsResendDisabled(false);
   }, [timeLeft]);
 
   const handleOtpChange = (index: number, value: string) => {
@@ -28,7 +41,6 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
       newOtp[index] = value;
       setOtp(newOtp);
 
-      // Auto-focus next input
       if (value && index < 3) {
         const nextInput = document.getElementById(`otp-${index + 1}`);
         nextInput?.focus();
@@ -43,9 +55,29 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
     }
   };
 
-  const handleVerify = () => {
-    if (otp.every(digit => digit !== '')) {
-      onVerify();
+  const handleVerify = async () => {
+    if (!otp.every((digit) => digit !== '') || isVerifying) {
+      return;
+    }
+
+    const otpCode = otp.join('');
+    setIsVerifying(true);
+
+    try {
+      const response = await verifyOtp(phoneNumber, otpCode);
+
+      if (response.ok && response.verified) {
+        onVerify();
+      } else {
+        onNotify(
+          response.errorMessage || NOTIFICATION_MESSAGES.ERROR_GENERIC,
+          'error'
+        );
+      }
+    } catch {
+      onNotify(NOTIFICATION_MESSAGES.ERROR_GENERIC, 'error');
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -53,7 +85,6 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
     setTimeLeft(120);
     setIsResendDisabled(true);
     setOtp(['', '', '', '']);
-    // In a real app, you would resend the OTP here
   };
 
   const formatTime = (seconds: number) => {
@@ -62,11 +93,14 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const isOtpComplete = otp.every((digit) => digit !== '');
+  const isVerifyDisabled = !isOtpComplete || isVerifying;
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>×</button>
-        
+        <button className="close-button" onClick={onClose} type="button">×</button>
+
         <div className="otp-header">
           <div className="snapflix-logo-container-custom">
             <div className="modal-play-icon">
@@ -90,7 +124,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
           </div>
           <h2 className="otp-title">Verify Your Phone</h2>
           <p className="otp-description">
-            Enter the 4-digit code sent to {phoneNumber}
+            Enter the 4-digit code sent to {formatMsisdnForDisplay(phoneNumber)}
           </p>
         </div>
 
@@ -107,13 +141,11 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
                 className={`otp-input ${digit ? 'filled' : ''}`}
                 maxLength={1}
                 autoComplete="off"
+                disabled={isVerifying}
               />
             ))}
           </div>
-          <div className="otp-progress">
-            {/* <div className={`progress-bar ${otp.filter(d => d).length > 0 ? 'active' : ''}`} 
-                 style={{width: `${(otp.filter(d => d).length / 4) * 100}%`}}></div> */}
-          </div>
+          <div className="otp-progress" />
         </div>
 
         <div className="security-notice">
@@ -133,7 +165,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
               </div>
             </div>
           ) : (
-            <button className="resend-button" onClick={handleResend}>
+            <button className="resend-button" onClick={handleResend} type="button">
               <span>🔄</span>
               <span>Resend OTP</span>
             </button>
@@ -141,19 +173,36 @@ const OTPModal: React.FC<OTPModalProps> = ({ phoneNumber, onVerify, onClose }) =
         </div>
 
         <div className="verify-section">
-          <button 
-            className="verify-button"
+          <button
+            className={`verify-button ${isVerifying ? 'loading' : ''}`}
             onClick={handleVerify}
-            disabled={!otp.every(digit => digit !== '')}
+            disabled={isVerifyDisabled}
+            type="button"
             style={{
               background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
-              opacity: !otp.every(digit => digit !== '') ? 0.6 : 1
+              opacity: isVerifyDisabled ? 0.6 : 1,
             }}
           >
-            <span>Verify & Continue</span>
+            {isVerifying ? (
+              <>
+                <span className="button-spinner" aria-hidden="true" />
+                <span>Verifying...</span>
+              </>
+            ) : (
+              <>
+                <span>Verify & Continue</span>
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                  <path d="M4 10L16 10M10 4L16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </>
+            )}
+          </button>
+
+          <button className="otp-back-button" onClick={onBack} type="button" disabled={isVerifying}>
             <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-              <path d="M4 10L16 10M10 4L16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M16 10L4 10M10 4L4 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
+            <span>Back</span>
           </button>
         </div>
       </div>

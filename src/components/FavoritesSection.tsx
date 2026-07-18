@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import './FavoritesSection.css';
 import { allVideos, getVideoUrl } from '../utils/localVideos';
+import { VideoPlayHandler } from '../types/video';
 
 interface VideoItem {
   name: string;
@@ -10,10 +11,10 @@ interface VideoItem {
 
 interface FavoriteCardProps {
   video: VideoItem;
-  onVideoClick: () => void;
+  onVideoPlay: VideoPlayHandler;
 }
 
-const FavoriteCard: React.FC<FavoriteCardProps> = ({ video, onVideoClick }) => {
+const FavoriteCard: React.FC<FavoriteCardProps> = ({ video, onVideoPlay }) => {
   const [showVideo, setShowVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoUrl = video.video;
@@ -67,10 +68,17 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ video, onVideoClick }) => {
     setShowVideo(false);
   };
 
+  const handleClick = () => {
+    onVideoPlay({
+      title: video.name,
+      videoUrl: video.video,
+    });
+  };
+
   return (
     <div 
       className="favorite-card"
-      onClick={onVideoClick}
+      onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -117,11 +125,11 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ video, onVideoClick }) => {
 };
 
 interface FavoritesSectionProps {
-  onVideoClick: () => void;
+  onVideoPlay: VideoPlayHandler;
   onNavigate?: (page: string) => void;
 }
 
-const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNavigate }) => {
+const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoPlay, onNavigate }) => {
   const [favoriteVideos, setFavoriteVideos] = useState<VideoItem[]>([]);
 
   useEffect(() => {
@@ -202,7 +210,7 @@ const FavoritesSection: React.FC<FavoritesSectionProps> = ({ onVideoClick, onNav
       
       <div className="favorites-grid">
         {favoriteVideos.slice(0, 4).map((video) => (
-          <FavoriteCard key={`${video.name}-${video.video}`} video={video} onVideoClick={onVideoClick} />
+          <FavoriteCard key={`${video.name}-${video.video}`} video={video} onVideoPlay={onVideoPlay} />
         ))}
       </div>
     </div>

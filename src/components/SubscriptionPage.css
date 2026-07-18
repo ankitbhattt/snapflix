@@ -1147,3 +1147,48 @@
     font-size: 1.6rem;
   }
 }
+
+.subscription-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.subscription-loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 36px;
+  border-radius: 16px;
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  color: white;
+}
+
+.subscription-loading-card p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.subscription-loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #dc2626;
+  border-radius: 50%;
+  animation: subscriptionSpin 0.8s linear infinite;
+}
+
+@keyframes subscriptionSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

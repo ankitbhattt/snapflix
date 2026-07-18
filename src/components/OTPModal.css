@@ -456,6 +456,53 @@
   opacity: 0.6 !important;
 }
 
+.modal-content .verify-button.loading {
+  cursor: wait !important;
+}
+
+.otp-back-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.otp-back-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.otp-back-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: otpButtonSpin 0.7s linear infinite;
+}
+
+@keyframes otpButtonSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .verification-tips {
   display: flex;
   flex-direction: column;

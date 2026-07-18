@@ -124,6 +124,16 @@
   transform: translateY(-1px);
 }
 
+.subscribe-btn.subscribed {
+  background-color: #16a34a;
+  cursor: default;
+}
+
+.subscribe-btn.subscribed:hover {
+  background-color: #15803d;
+  transform: none;
+}
+
 /* Language Dropdown */
 .language-selector {
   position: relative;

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import './VideosPage.css';
 import { allVideos, getVideoUrl } from '../utils/localVideos';
+import { PlayableVideo, VideoPlayHandler } from '../types/video';
 
 interface VideoItem {
   id: number;
@@ -10,12 +11,12 @@ interface VideoItem {
 }
 
 interface VideosPageProps {
-  onVideoClick?: () => void;
+  onVideoPlay?: VideoPlayHandler;
 }
 
 interface VideoCardProps {
   video: VideoItem;
-  onCardClick: () => void;
+  onCardClick: (video: PlayableVideo) => void;
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ video, onCardClick }) => {
@@ -115,20 +116,10 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onCardClick }) => {
   }, []);
 
   const handleCardClick = () => {
-    if (!isHovered) {
-      setIsHovered(true);
-      playVideo();
-      
-      if (touchTimerRef.current) {
-        clearTimeout(touchTimerRef.current);
-      }
-      touchTimerRef.current = setTimeout(() => {
-        setIsHovered(false);
-        pauseVideo();
-      }, 5000);
-    }
-    
-    onCardClick();
+    onCardClick({
+      title: video.title,
+      videoUrl: video.video,
+    });
   };
 
   return (
@@ -182,7 +173,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onCardClick }) => {
   );
 };
 
-const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
+const VideosPage: React.FC<VideosPageProps> = ({ onVideoPlay }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Convert allVideos to VideoItem format
@@ -231,7 +222,7 @@ const VideosPage: React.FC<VideosPageProps> = ({ onVideoClick }) => {
             <VideoCard 
               key={video.id}
               video={video}
-              onCardClick={() => onVideoClick?.()}
+              onCardClick={(video) => onVideoPlay?.(video)}
             />
           ))}
         </div>

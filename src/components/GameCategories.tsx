@@ -2,6 +2,7 @@ import React, { useCallback, useState, useRef, useEffect, useLayoutEffect } from
 import './GameCategories.css';
 import { useTranslation } from '../contexts/TranslationContext';
 import { topTrendingVideos, adventureVideos, actionVideos, brainteaseVideos, fightingVideos, getVideoUrl } from '../utils/localVideos';
+import { VideoPlayHandler } from '../types/video';
 
 interface VideoItem {
   name: string;
@@ -10,18 +11,18 @@ interface VideoItem {
 }
 
 interface VideoCategoriesProps {
-  onVideoClick: () => void;
+  onVideoPlay: VideoPlayHandler;
   onNavigate?: (page: string) => void;
 }
 
 interface VideoCardProps {
   video: VideoItem;
-  onVideoClick: () => void;
+  onVideoPlay: VideoPlayHandler;
   onFavorite?: (name: string) => void;
   isFavorite?: boolean;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, isFavorite }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoPlay, onFavorite, isFavorite }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [favorite, setFavorite] = useState(isFavorite || false);
@@ -126,24 +127,11 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
     };
   }, []);
 
-  const handleCardClick = (e: React.MouseEvent) => {
-    // On mobile, ensure video plays on click as well
-    if (!isHovered) {
-      setIsHovered(true);
-      playVideo();
-      
-      // Auto-pause after 5 seconds on mobile
-      if (touchTimerRef.current) {
-        clearTimeout(touchTimerRef.current);
-      }
-      touchTimerRef.current = setTimeout(() => {
-        setIsHovered(false);
-        pauseVideo();
-      }, 5000);
-    }
-    
-    // Call the original onClick handler
-    onVideoClick();
+  const handleCardClick = () => {
+    onVideoPlay({
+      title: video.name,
+      videoUrl: video.video,
+    });
   };
 
   return (
@@ -207,7 +195,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onVideoClick, onFavorite, 
   );
 };
 
-const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavigate }) => {
+const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoPlay, onNavigate }) => {
   const { t } = useTranslation();
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   
@@ -282,9 +270,10 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavig
     }
   ];
 
-  const handleVideoClick = useCallback(() => {
-    onVideoClick();
-  }, [onVideoClick]);
+  const handleVideoPlay = useCallback(
+    (video: Parameters<VideoPlayHandler>[0]) => onVideoPlay(video),
+    [onVideoPlay]
+  );
 
   return (
     <div className="game-categories">
@@ -310,7 +299,7 @@ const VideoCategories: React.FC<VideoCategoriesProps> = ({ onVideoClick, onNavig
               <VideoCard 
                 key={videoIndex}
                 video={video}
-                onVideoClick={handleVideoClick}
+                onVideoPlay={handleVideoPlay}
                 onFavorite={handleFavorite}
                 isFavorite={favorites.has(video.name)}
               />

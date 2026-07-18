@@ -301,7 +301,8 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
-.input-group.error .phone-input-wrapper {
+.input-group.error .phone-input-wrapper,
+.phone-input-wrapper.has-error {
   border-color: #ef4444;
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
@@ -318,6 +319,60 @@
 .error-message::before {
   content: "⚠";
   font-size: 16px;
+}
+
+.api-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 10px;
+  color: #fca5a5;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  animation: errorFadeIn 0.25s ease;
+}
+
+.api-error-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+}
+
+@keyframes errorFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: buttonSpin 0.7s linear infinite;
+}
+
+@keyframes buttonSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.send-otp-button.loading {
+  cursor: wait !important;
 }
 
 .terms-container {

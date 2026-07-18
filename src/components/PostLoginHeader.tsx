@@ -8,9 +8,19 @@ interface PostLoginHeaderProps {
   onLogout: () => void;
   onNavigate?: (page: string) => void;
   currentPage?: string;
+  isSubscribed?: boolean;
+  onAlreadySubscribed?: () => void;
+  onSubscribeClick?: () => void;
 }
 
-const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate, currentPage }) => {
+const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({
+  onLogout,
+  onNavigate,
+  currentPage,
+  isSubscribed = false,
+  onAlreadySubscribed,
+  onSubscribeClick,
+}) => {
   const { language, setLanguage, t } = useTranslation();
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   // const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -55,7 +65,22 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
   //   }
   // };
 
+  const handleSubscribeClick = () => {
+    if (isSubscribed) {
+      onAlreadySubscribed?.();
+      return;
+    }
+
+    onSubscribeClick?.();
+  };
+
   const handleNavigation = (page: string) => {
+    if (page === 'subscription') {
+      handleSubscribeClick();
+      setShowMobileMenu(false);
+      return;
+    }
+
     if (onNavigate) {
       onNavigate(page);
     }
@@ -183,11 +208,11 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
                   FAVORITES
                 </button>
                 <button 
-                  className={`mobile-nav-link ${currentPage === 'subscription' ? 'active' : ''}`}
+                  className={`mobile-nav-link ${currentPage === 'subscription' ? 'active' : ''} ${isSubscribed ? 'subscribed' : ''}`}
                   onClick={() => handleNavigation('subscription')}
                 >
                   <span className="mobile-nav-icon">💳</span>
-                  {t('header.subscribe')}
+                  {isSubscribed ? 'Subscribed' : t('header.subscribe')}
                 </button>
                 <button 
                   className="mobile-nav-link"
@@ -295,11 +320,12 @@ const PostLoginHeader: React.FC<PostLoginHeaderProps> = ({ onLogout, onNavigate,
             )}
           </div>
           
-          <button 
-            className="subscribe-btn"
-            onClick={() => onNavigate && onNavigate('subscription')}
+          <button
+            className={`subscribe-btn ${isSubscribed ? 'subscribed' : ''}`}
+            onClick={handleSubscribeClick}
+            type="button"
           >
-            {t('header.subscribe')}
+            {isSubscribed ? 'Subscribed' : t('header.subscribe')}
           </button>
           
           {/* <div className="profile-dropdown" ref={profileRef}>

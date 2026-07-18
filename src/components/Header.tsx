@@ -7,9 +7,10 @@ import { useTranslation } from '../contexts/TranslationContext';
 interface HeaderProps {
   onNavigate?: (page: string) => void;
   currentPage?: string;
+  onSubscribeClick?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
+const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage, onSubscribeClick }) => {
   const { language, setLanguage, t } = useTranslation();
   // const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
@@ -67,7 +68,22 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
   //   }
   // };
 
+  const handleSubscribeClick = () => {
+    if (onSubscribeClick) {
+      onSubscribeClick();
+      return;
+    }
+
+    onNavigate?.('subscription');
+  };
+
   const handleNavigation = (page: string) => {
+    if (page === 'subscription') {
+      handleSubscribeClick();
+      setShowMobileMenu(false);
+      return;
+    }
+
     if (onNavigate) {
       onNavigate(page);
     }
@@ -261,9 +277,10 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
             )}
           </div>
           
-          <button 
+          <button
             className="subscribe-btn"
-            onClick={() => onNavigate && onNavigate('subscription')}
+            onClick={handleSubscribeClick}
+            type="button"
           >
             {t('header.subscribe')}
           </button>
