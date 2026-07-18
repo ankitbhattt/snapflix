@@ -3,7 +3,7 @@
  *
  * Before production deploy, change APP_ENV to 'production'.
  */
-const APP_ENV = 'development'; // 'development' | 'production'
+const APP_ENV = 'production'; // 'development' | 'production'
 
 const API_HOST = 'https://apiunisol.com';
 const API_BACKEND_PATH = '/snapflix_backend';
